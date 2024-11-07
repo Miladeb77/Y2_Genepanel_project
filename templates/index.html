@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search PanelApp</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+        }
+        .search-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .search-input {
+            padding: 15px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            width: 300px;
+            font-size: 16px;
+            outline: none;
+        }
+        .search-button {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        .search-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h1>Search PanelApp Data</h1>
+        <p>Enter a Patient ID or R Code to retrieve associated information.</p>
+        <form action="/search" method="post">
+            <input type="text" name="search_input" class="search-input" placeholder="Enter Patient ID or R Code">
+            <br>
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </div>
+</body>
+</html>
