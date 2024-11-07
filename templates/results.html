@@ -3,39 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PanelApp Search Results</title>
+    <title>Search Results</title>
     <style>
+        /* Centering and page styling */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align content from the top */
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 50px; /* Add padding to position table lower */
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+        }
+
+        /* Centering container and spacing */
+        .container {
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        /* Title styling */
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Table styling */
         table {
             width: 100%;
             border-collapse: collapse;
+            background-color: #e7f3ff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
         }
-        table, th, td {
-            border: 1px solid black;
-            padding: 8px;
+
+        /* Header cells */
+        th {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
             text-align: left;
+        }
+
+        /* Data cells */
+        td {
+            padding: 10px;
+            text-align: left;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Table row hover effect */
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Table hover effect */
+        tr:hover {
+            background-color: #cde3ff;
         }
     </style>
 </head>
 <body>
-    <h2>Search Results for Relevant Disorder: {{ disorder }}</h2>
-    {% if rows %}
+    <div class="container">
+        <h1>Results for {{ search_input }}</h1>
+
+        {% if results %}
         <table>
-            <tr>
-                {% for col in rows[0].keys() %}
-                    <th>{{ col }}</th>
-                {% endfor %}
-            </tr>
-            {% for row in rows %}
+            <thead>
                 <tr>
-                    {% for value in row %}
-                        <td>{{ value }}</td>
-                    {% endfor %}
+                    <th>Patient ID</th>
+                    <th>Disease</th>
+                    <th>Disease Group</th>
+                    <th>Clinical ID</th>
+                    <th>Gene Ensembl ID (GRch38)</th>
+                    <th>Gene HGNC Symbol</th>
+                    <th>Version PanelApp API</th>
                 </tr>
-            {% endfor %}
+            </thead>
+            <tbody>
+                {% for row in results %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                    <td>{{ row[6] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
-    {% else %}
-        <p>No results found for {{ disorder }}.</p>
-    {% endif %}
-    <a href="/">Go back</a>
+        {% else %}
+        <p>No data found for the specified input.</p>
+        {% endif %}
+    </div>
 </body>
 </html>
