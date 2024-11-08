@@ -1,8 +1,15 @@
 import requests
 import pandas as pd
+import json
+import sqlite3
+import os
+from datetime import datetime
 
-#This extracts the data from panelapp api
-# Base URL for PanelApp API
+# Set the working directory to the script's location
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
+
+# This extracts the data from panelapp API
 server = "https://panelapp.genomicsengland.co.uk"
 panels_url = f"{server}/api/v1/panels/"
 headers = {"Content-Type": "application/json"}
@@ -19,7 +26,6 @@ while True:
         panels = data.get("results", [])
         
         for panel in panels:
-            # Filter for panels with relevant disorders containing "R" codes
             r_codes = [disorder for disorder in panel.get("relevant_disorders", []) if disorder.startswith("R")]
             if r_codes:
                 panel_id = panel["id"]
@@ -31,7 +37,6 @@ while True:
                 if panel_detail_response.status_code == 200:
                     panel_detail_data = panel_detail_response.json()
                     
-                    # Extract panel information
                     panel_info = {
                         "panel_id": panel_detail_data["id"],
                         "hash_id": panel_detail_data.get("hash_id"),
@@ -48,7 +53,6 @@ while True:
                         "types": [ptype.get("name") for ptype in panel_detail_data.get("types", [])]
                     }
                     
-                    # Extract gene information within the panel
                     for gene in panel_detail_data.get("genes", []):
                         gene_data = {
                             "gene_symbol": gene["entity_name"],
@@ -63,13 +67,11 @@ while True:
                             "transcript": gene.get("transcript"),
                         }
                         
-                        # Combine panel and gene data into a single dictionary
                         combined_data = {**panel_info, **gene_data}
                         all_panel_gene_data.append(combined_data)
                 else:
                     print(f"Failed to retrieve detailed info for panel {panel_id}")
         
-        # Check if there is a next page
         if data.get("next") is None:
             break
         else:
@@ -81,28 +83,34 @@ while True:
 # Convert the data to a DataFrame
 panel_gene_df = pd.DataFrame(all_panel_gene_data)
 
-# Display the first few rows of the DataFrame
-#print(panel_gene_df.head())
-#len(panel_gene_df)
-# Convert lists to comma-separated strings
+# Format lists and dictionaries
 list_columns = ["relevant_disorders", "publications", "evidence", "phenotypes", "transcript"]
 for col in list_columns:
     panel_gene_df[col] = panel_gene_df[col].apply(lambda x: ', '.join(x) if isinstance(x, list) else "")
 
-# Convert dictionaries to JSON strings
 dict_columns = ["types"]
 for col in dict_columns:
     panel_gene_df[col] = panel_gene_df[col].apply(lambda x: json.dumps(x) if isinstance(x, dict) else "")
 
-# Ensure all columns are in basic types, like str, int, or float
 for col in panel_gene_df.columns:
     if panel_gene_df[col].dtype == "object":
         panel_gene_df[col] = panel_gene_df[col].astype(str)
 
-# Save to SQLite database
-# conn = sqlite3.connect("panelapp.db")
-# panel_gene_df.to_sql("panel_info", conn, if_exists="replace", index=False)
-# conn.close()
+# Generate a versioned database name with date and time
+date_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+database_name = f"panelapp_v{date_str}.db"
 
-# print("Data saved to SQLite database 'panelapp.db'")
-panel_gene_df.head()
+# Archive previous databases
+archive_folder = os.path.join(script_dir, "archive_databases")
+os.makedirs(archive_folder, exist_ok=True)
+for db_file in os.listdir(script_dir):
+    if db_file.startswith("panelapp_v") and db_file.endswith(".db") and db_file != database_name:
+        os.rename(db_file, os.path.join(archive_folder, db_file))
+        os.system(f"gzip {os.path.join(archive_folder, db_file)}")  # Compress the database
+
+# Save the new database in the current working directory
+conn = sqlite3.connect(database_name)
+panel_gene_df.to_sql("panel_info", conn, if_exists="replace", index=False)
+conn.close()
+
+print(f"Data saved to SQLite database '{database_name}'")
