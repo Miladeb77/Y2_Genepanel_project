@@ -89,7 +89,7 @@ Use the environment.yml file to set up the environment:
 
 3.	Verify cron job execution:
    
-	-	Wait approximately 15 minutes, then check:
+	Wait approximately 15 minutes, then check:
 	-	The archive_databases folder contains previous database versions.
 	-	The latest database is in the main working directory.
 	-	The cron_job_output.log file contains logs from each program execution.
