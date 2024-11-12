@@ -102,7 +102,7 @@ Use the environment.yml file to set up the environment:
 
 1.	Remove test output files:
 
-	-	After confirming the cron job works as expected every five minutes, delete test outputs to start fresh:
+	After confirming the cron job works as expected every five minutes, delete test outputs to start fresh:
 	-	Remove the archive_databases folder.
 	-	Delete the latest database file from your working directory.
 	-	Delete cron_job_output.log.
