@@ -1,8 +1,10 @@
 # Setup and Testing Guide for panelApp_extract_data.py
 
+
 ## Prerequisites
 
 •	Ensure Anaconda or Miniconda is installed on your machine.
+
 
 
 ## Step 1: Set Up the Conda Environment
@@ -25,7 +27,9 @@ Use the environment.yml file to set up the environment:
 		pip install -r requirements.txt
 
 
+
 ## Step 2: Configure Environment Settings
+
 
 
 1.	Disable automatic activation of the base environment:
@@ -49,7 +53,9 @@ Use the environment.yml file to set up the environment:
 		source ~/.bashrc
 
 
+
 ## Step 3: Prepare for Cron Job Setup
+
 
 1.	Locate the Python interpreter path:
 
@@ -65,7 +71,9 @@ Use the environment.yml file to set up the environment:
 
 
 
+
 ## Step 4: Configure Cron Job for Automated Database Generation
+
 
 1.	Add the following cron job to run the script every five minutes (for testing purposes):
 
@@ -88,7 +96,9 @@ Use the environment.yml file to set up the environment:
 
 
 
+
 ## Step 5: Finalize Cron Job for Monthly Execution
+
 
 1.	Remove test output files:
 
@@ -112,7 +122,9 @@ Use the environment.yml file to set up the environment:
 	•	Save and exit the editor as before (Ctrl+X, Y, then Enter).
 
 
+
 ## Step 6: Disable the Cron Job (if needed)
+
 
 
 •	To stop the cron job without deleting it, open the crontab editor:
