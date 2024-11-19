@@ -124,5 +124,4 @@ After confirming the cron job works as expected every five minutes, delete test 
 
     	# 0 0 1 * * <path_to_python> <path_to_script>/panelApp_extract_data.py
 
-
 -	Save and exit.
