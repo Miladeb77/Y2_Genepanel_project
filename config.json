@@ -1,0 +1,6 @@
+{
+    "server": "https://panelapp.genomicsengland.co.uk",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
