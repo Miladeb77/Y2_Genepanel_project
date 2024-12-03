@@ -1,22 +1,19 @@
-import requests  # Import the requests library to make HTTP requests.
-import json  # Import the json library to handle JSON data (commonly used in APIs).
-import logging  # Import logging module to handle logging throughout the program.
+import requests
+import json
+import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# Set up the logging level you want to be recorded and also the format of the logs.
 logging.basicConfig(
-    level=logging.DEBUG,  # The logging level that you want to be recorded.
-    filename="program.log",  # This is the path to the file that the logs will be recorded in.
-    encoding="utf-8",  # This means that the log file will accept and record typical English characters and other symbols if needed.
-    filemode="a",  # Mode the file should be in. 'a' means that the file will be open for writing.
-    format="{asctime} - {levelname} - {message}",  # This is the format of the messages in the log file, what they will look like.
-    style="{",  # This makes sure the log uses string formatting.
-    datefmt="%Y-%m-%d %H:%M",  # The date and time of errors will be recorded in the error log.
+    level=logging.DEBUG,
+    filename="program.log",
+    encoding="utf-8",
+    filemode="a",
+    format="{asctime} - {levelname} - {message}",
+    style="{",
+    datefmt="%Y-%m-%d %H:%M",
 )
 
 def get_ensembl_data(ensembl_id, species, server, headers):
-    """
-    Fetch gene, transcript, and exon data from the Ensembl REST API using the Ensembl Gene ID.
-    """
     gene_endpoint = f"/lookup/id/{ensembl_id}"
     gene_url = f"{server}{gene_endpoint}"
 
@@ -28,7 +25,7 @@ def get_ensembl_data(ensembl_id, species, server, headers):
             gene_data = response.json()
             transcript_endpoint = f"/overlap/region/{species}/{gene_data['seq_region_name']}:{gene_data['start']}-{gene_data['end']}?feature=transcript"
             transcript_url = f"{server}{transcript_endpoint}"
-            
+
             transcript_response = requests.get(transcript_url, headers=headers)
             if transcript_response.ok:
                 transcripts = transcript_response.json()
@@ -59,9 +56,6 @@ def get_ensembl_data(ensembl_id, species, server, headers):
     return None
 
 def write_bed_file(JSON_output, output_file):
-    """
-    Write the genomic coordinates of exons to a BED file, focusing on MANE_Select transcripts.
-    """
     logging.info(f"Writing to BED file {output_file}.")
     
     try:
@@ -86,30 +80,37 @@ def write_bed_file(JSON_output, output_file):
     except IOError as e:
         logging.error(f"Error writing to file {output_file}: {e}")
 
+def fetch_all_genes_data(gene_ids, species, server, headers):
+    """
+    Fetch data for multiple genes in parallel using ThreadPoolExecutor.
+    """
+    with ThreadPoolExecutor(max_workers=10) as executor:  # Limiting max concurrent threads to 10
+        futures = {executor.submit(get_ensembl_data, gene_id, species, server, headers): gene_id for gene_id in gene_ids}
+        results = []
+        for future in as_completed(futures):
+            gene_id = futures[future]
+            try:
+                data = future.result()
+                if data:
+                    results.append(data)
+                else:
+                    logging.error(f"Failed to retrieve data for gene {gene_id}.")
+            except Exception as e:
+                logging.error(f"Error fetching data for gene {gene_id}: {e}")
+        return results
+
 def main():
-    """
-    Main function to drive the execution of the program.
-    It coordinates fetching data from the Ensembl API and writing it to a BED file.
-    """
     server = "https://rest.ensembl.org"
     species = "homo_sapiens"
     headers = {"Content-Type": "application/json"}
     
-    # Ask for the Ensembl Gene IDs from the user, separated by commas
-    table_id = ["ENSG00000139618","ENSG00000183765"]
+    table_id = ["ENSG00000139618", "ENSG00000183765", "ENSG00000168235", "ENSG00000141510"]  # Add more gene IDs as needed
     
     if not table_id:
         logging.warning("No Ensembl Gene IDs provided. Exiting.")
         return
     
-    JSON_output = []
-    
-    for x in table_id:
-        gene_data = get_ensembl_data(x, species, server, headers)
-        if gene_data:
-            JSON_output.append(gene_data)
-        else:
-            logging.error(f"Could not retrieve data for Ensembl Gene ID: {ensembl_id}")
+    JSON_output = fetch_all_genes_data(table_id, species, server, headers)
     
     if JSON_output:
         output_file = "gene_exons_coordinates_with_type.bed"
