@@ -1,5 +1,5 @@
 import PanelGeneMapper
-from PanelGeneMapper import retrieve_data
+from PanelGeneMapper import panelgenemapper
 
 print("Package installed successfully!")
-retrieve_data.main()
+panelgenemapper.main()

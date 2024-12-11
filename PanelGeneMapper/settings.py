@@ -1,7 +1,7 @@
 import logging
 import subprocess
 from crontab import CronTab
-from .retrieve_data import get_panel_app_list, compare_panel_versions
+from .panelgenemapper import get_panel_app_list, compare_panel_versions
 
 
 # Logging configuration

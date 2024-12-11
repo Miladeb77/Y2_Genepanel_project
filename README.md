@@ -5,7 +5,7 @@
 
 ---
 
-## **Installation**
+## Installation
 
 ### Prerequisites
 1. Python version `>=3.9`
@@ -19,85 +19,102 @@
    cd PanelGeneMapper
    ```
 
-2. Install the package in editable mode:
+2. Install the dependencies using the provided `environment.yml` file:
    ```bash
-   pip install -e .
+   pip install -r requirements.txt
    ```
 
 ---
 
-## **Usage**
+## Usage
 
-### 1. **Step 1: Build PanelApp Database**
-   Run the `build_panelApp_database` module to fetch and process the PanelApp data:
-   ```bash
-   python -m PanelGeneMapper.build_panelApp_database
-   ```
-   This script will:
-   - Fetch the latest gene panels from PanelApp.
-   - Process the data into a structured format.
-   - Save the data into an SQLite database (`panelapp_v*.db`).
-
----
-
-### 2. **Step 2: Integrate Patient Data**
-   Use the `build_patient_database` module to create a patient database and integrate with the PanelApp database:
-   ```bash
-   python -m PanelGeneMapper.build_patient_database --num_patients 1000
-   ```
-   Options:
-   - `--num_patients`: Number of random patients to generate (default: 500).
-   - `--patient_data`: Provide a JSON file with patient data.
-   - `--default_test_date`: Default test date (e.g., `YYYY-MM-DD`).
+### 1. Build PanelApp Database
+Run the `build_panelApp_database` module to fetch and process the PanelApp data:
+```bash
+python -m modules.build_panelApp_database
+```
+This script will:
+- Fetch the latest gene panels from PanelApp.
+- Process the data into a structured format.
+- Save the data into an SQLite database (`panelapp_v*.db`).
 
 ---
 
-### 3. **Step 3: Retrieve Data**
-   Use the `retrieve_data` module to:
-   - Add patients.
-   - Retrieve gene lists.
-   - List patients.
+### 2. Integrate Patient Data
+Use the `build_patient_database` module to create a patient database and integrate it with the PanelApp database:
+```bash
+python -m modules.build_patient_database --num_patients 1000
+```
+Options:
+- `--num_patients`: Number of random patients to generate (default: 500).
+- `--patient_data`: Provide a JSON file with patient data.
+- `--default_test_date`: Default test date (e.g., `YYYY-MM-DD`).
+
+---
+
+### 3. Retrieve Data
+Use the `panelgenemapper.py` script to:
+- Add patients.
+- Retrieve gene lists.
+- List patients.
 
 #### Example: Retrieve Gene List
 ```bash
-python -m PanelGeneMapper.retrieve_data retrieve_genes --r_code R169 --output_file gene_list.csv
+python panelgenemapper.py retrieve_genes --r_code R169 --output_file gene_list.csv
 ```
-Other commands:
+
+Other available commands:
 - `update`: Update the PanelApp database.
 - `list_patients`: List all patients in the database.
 - `add_patient`: Add a new patient.
 
 ---
 
-### 4. **Step 4: Configure Settings**
-   Use the `settings.py` module to schedule updates or run them manually.
-
-#### Example: Schedule Updates
+### 4. Schedule Updates
+Schedule periodic updates using the `panelgenemapper.py` script:
 ```bash
-python -m PanelGeneMapper.settings interval daily
+python panelgenemapper.py update
 ```
-Options for interval:
-- `5min`, `daily`, `weekly`, `monthly`, `6months`, `yearly`.
 
 ---
 
-## **Folder Structure**
-- `PanelGeneMapper/`
-  - `build_panelApp_database.py`: Fetch and process PanelApp data.
-  - `build_patient_database.py`: Create and manage patient databases.
-  - `retrieve_data.py`: Main script for retrieving data.
-  - `settings.py`: Configure and manage update settings.
-- `config/`: Contains configuration files.
+## Project Structure
+
+```
+Y2_Genepanel_project/
+├── modules/
+│   ├── __init__.py                # Makes the folder a Python package
+│   ├── build_patient_database.py  # Functions for handling patient database
+│   ├── build_panelApp_database.py # Functions for handling PanelApp database
+│   ├── database_utils.py          # Shared database-related utilities
+│   ├── logging_utils.py           # Logging setup and utilities
+│   ├── panelapp_api.py            # Functions for interacting with the PanelApp API
+├── panelgenemapper.py             # Main script (contains argparse and main function)
+├── environment.yml                # Dependencies and environment configuration
+├── README.md                      # Documentation
+```
+
+### Description of Key Components
+- **`modules/`**: Contains modularized Python files for specific tasks.
+  - `build_patient_database.py`: Functions for managing patient databases, such as saving new records.
+  - `build_panelApp_database.py`: Functions for managing PanelApp databases, including updates.
+  - `database_utils.py`: Shared utility functions for database handling, such as retrieving or merging databases.
+  - `logging_utils.py`: Setup and configuration for logging within the project.
+  - `panelapp_api.py`: Functions to interact with the PanelApp API for data retrieval.
+- **`panelgenemapper.py`**: The main entry point for the project. Handles command-line arguments, orchestrates various tasks, and integrates all modules.
+- **`environment.yml`**: Specifies dependencies and environment setup for the project.
+- **`README.md`**: Provides documentation for the project, including installation, usage, and structure.
 
 ---
 
-## **Logs and Outputs**
-- Logs are saved in the root directory (e.g., `retrieve_data.log`, `build_panelApp_db_info_log.log`).
-- Outputs like CSV files are saved to the specified path during execution.
+## Logs and Outputs
+- Logs are saved in the root directory (e.g., `panelgenemapper.log`, `build_panelApp_db_info.log`).
+- Outputs such as CSV files are saved to the specified path during execution.
 
 ---
 
-## **Common Issues**
+## Common Issues
+
 1. **Python Encoding Errors**:
    Set the environment variable:
    ```bash
@@ -112,4 +129,5 @@ Options for interval:
 
 ---
 
-Feel free to reach out for support or create an issue in the repository for further assistance.
+## Contributing
+Feel free to submit pull requests or create issues for bugs, features, or general feedback.
