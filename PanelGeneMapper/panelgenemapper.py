@@ -2,8 +2,8 @@ import argparse
 import os
 from modules.logging_utils import setup_logging
 from modules.build_patient_database import save_to_database
-from modules.build_panelApp_database import update_database
-from modules.database_utils import retrieve_latest_panelapp_db, connect_and_join_databases
+from modules import build_panelApp_database
+from modules import database_utils
 from modules.panelapp_api import get_panel_app_list
 
 def parse_arguments():

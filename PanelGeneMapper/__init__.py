@@ -1,10 +1,5 @@
 # PanelGeneMapper/modules/__init__.py
 
-# Expose specific functions or modules for easier imports
-from .build_panelApp_database import main as build_panelApp_database
-from .build_patient_database import main as build_patient_database
-from .retrieve_data import main as retrieve_data_main
-from .settings import run_update_check
 
 # License information (if desired, as shown in the example)
 """
