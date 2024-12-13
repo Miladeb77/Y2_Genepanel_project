@@ -16,7 +16,6 @@
 1. Clone the repository or download the source code:
    ```bash
    git clone https://github.com/YourRepo/PanelGeneMapper.git
-   cd PanelGeneMapper
    ```
 
 2. Install the dependencies using the provided `environment.yml` file:
@@ -43,7 +42,7 @@ This script will:
 ### 2. Integrate Patient Data
 Use the `build_patient_database` module to create a patient database and integrate it with the PanelApp database:
 ```bash
-python -m modules.build_patient_database --num_patients 1000
+python -m PanelGeneMapper.modules.build_patient_database --num_patients 1000
 ```
 Options:
 - `--num_patients`: Number of random patients to generate (default: 500).
@@ -52,7 +51,18 @@ Options:
 
 ---
 
-### 3. Retrieve Data
+---
+
+### 3. Build the latest panelapp database
+Use the `build_panelApp_database` module to create a patient database and integrate it with the PanelApp database:
+```bash
+python -m PanelGeneMapper.modules.build_panelApp_database
+```
+Options:
+
+---
+
+### 4. Retrieve Data
 Use the `panelgenemapper.py` script to:
 - Add patients.
 - Retrieve gene lists.
@@ -70,7 +80,7 @@ Other available commands:
 
 ---
 
-### 4. Schedule Updates
+### 5. Schedule Updates
 Schedule periodic updates using the `panelgenemapper.py` script:
 ```bash
 python panelgenemapper.py update
@@ -82,6 +92,12 @@ python panelgenemapper.py update
 
 ```
 Y2_Genepanel_project/
+├── tests/                        # Tests
+    ├── __init__.py
+    ├── test_panelapi_db_build.py
+├── environment.yml                # Dependencies and environment configuration
+├── README.md                      # Documentation
+PanelGeneMapper/
 ├── modules/
 │   ├── __init__.py                # Makes the folder a Python package
 │   ├── build_patient_database.py  # Functions for handling patient database
@@ -89,9 +105,9 @@ Y2_Genepanel_project/
 │   ├── database_utils.py          # Shared database-related utilities
 │   ├── logging_utils.py           # Logging setup and utilities
 │   ├── panelapp_api.py            # Functions for interacting with the PanelApp API
+├── __init__.py
 ├── panelgenemapper.py             # Main script (contains argparse and main function)
-├── environment.yml                # Dependencies and environment configuration
-├── README.md                      # Documentation
+
 ```
 
 ### Description of Key Components
