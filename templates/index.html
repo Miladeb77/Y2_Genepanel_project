@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PanelApp Patient Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>PanelApp Patient Search</h1>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    </header>
+    <main>
+        <section class="form-section">
+            <h2>Search for Patient or R Code</h2>
+            <form id="search-form">
+                <label for="search-type">Search By:</label>
+                <select id="search-type" name="search-type">
+                    <option value="patient_id">Patient ID</option>
+                    <option value="r_code">R Code</option>
+                </select>
+                <label for="search-input">Enter Value:</label>
+                <input type="text" id="search-input" name="search-input" placeholder="e.g., PATIENT_001 or R84" required>
+                <button type="submit">Search</button>
+            </form>
+        </section>
+        <section id="results-section">
+            <h2>Results</h2>
+            <div id="results"></div>
+        </section>
+        <section id="input-section" style="display:none;">
+            <h2>Provide Additional Information</h2>
+            <div id="additional-input"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 PanelApp Project</p>
+    </footer>
+    <!-- Modal for user confirmation -->
+    <div id="rcode-modal" class="modal">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <button id="yes-btn">Yes</button>
+            <button id="no-btn">No</button>
+        </div>
+    </div>
+    <!-- Modal for entering R Code when patient ID is not found -->
+    <div id="rcode-input-modal" class="modal">
+        <div class="modal-content">
+            <p id="rcode-input-message">Please provide the R Code for the patient:</p>
+            <input type="text" id="rcode-input-box" placeholder="Enter R Code">
+            <button id="rcode-submit-btn">Submit</button>
+            <button id="rcode-cancel-btn">Cancel</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -372,18 +372,15 @@ def get_r_code_data(r_code, db_path):
         logging.error(f"Error fetching records for R code {r_code}: {e}")  # Log any error encountered
         raise  # Re-raise the exception for higher-level handling
 
+from flask import render_template
+
 @app.route('/')
 def index():
     """
-    Serve the `index.html` file for the root URL.
-
-    This is the main entry point of the application, providing the user interface.
-
-    Returns:
-        Response: The `index.html` file from the static folder.
+    Serve the `index.html` file using render_template.
     """
-    logging.info("Serving index.html for the root route.")  # Log when the index page is served
-    return send_from_directory(app.static_folder, 'index.html')
+    logging.info("Serving index.html for the root route.")
+    return render_template('index.html')
 
 @app.route('/<path:filename>')
 def serve_static_files(filename):
