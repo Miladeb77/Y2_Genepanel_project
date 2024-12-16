@@ -47,8 +47,12 @@ def extract_ensembl_ids(csv_file):
                 if ensembl_id:  # Check if the Ensembl ID is valid.
                     ensembl_ids.add(ensembl_id)  # Add the ID to the set of unique Ensembl IDs.
 
+        if list(ensembl_ids) == []:
+            raise IOError
+
     except IOError as e:  # Handle file-related errors.
         logging.error(f"Error reading file {csv_file}: {e}")  # Log the error with file details.
+        return "Error with input CSV"
 
     return list(ensembl_ids)  # Convert the set to a list and return.
 
