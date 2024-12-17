@@ -24,12 +24,12 @@ logging.basicConfig(
 def extract_ensembl_ids(csv_file):
     """
     Extract Ensembl gene IDs from the gene_list.csv file.
-
+    
     Parameters
     ----------
     csv_file : str
         Path to the CSV file.
-
+    
     Returns
     -------
     list of str
@@ -37,7 +37,7 @@ def extract_ensembl_ids(csv_file):
     """
     logging.info(f"Reading Ensembl gene IDs from {csv_file}.")  # Log the start of the process.
     ensembl_ids = set()  # Use a set to store unique Ensembl IDs for efficiency.
-
+    
     try:
         with open(csv_file, "r") as file:  # Open the CSV file for reading.
             reader = csv.DictReader(file)  # Create a DictReader object to read the CSV file.
@@ -46,16 +46,16 @@ def extract_ensembl_ids(csv_file):
                 
                 if ensembl_id:  # Check if the Ensembl ID is valid.
                     ensembl_ids.add(ensembl_id)  # Add the ID to the set of unique Ensembl IDs.
-
+    
         if list(ensembl_ids) == []:
             raise IOError
-
+    
     except IOError as e:  # Handle file-related errors.
         logging.error(f"Error reading file {csv_file}: {e}")  # Log the error with file details.
-        return "Error with input CSV"
-
+        return 'Error with input CSV'
+    
     return list(ensembl_ids)  # Convert the set to a list and return.
-
+    
 def get_mane_exon_data(ensembl_id, species, server, headers):
     """
     Retrieve MANE Select exons for a gene using the overlap endpoint.
