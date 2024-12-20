@@ -1,52 +1,64 @@
 import pandas as pd
 import random
 from datetime import datetime, timedelta
-import argparse
-import json
 import sqlite3
 import logging
 import os
+import sys
+import argparse
 
-def setup_logging():
-    """
-    Configure logging settings.
-    """
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        handlers=[
-            logging.FileHandler("patient_build_database.log"),
-            logging.StreamHandler()
-        ]
-    )
+# Add the directory containing custom_logging to sys.path
+script_dir = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(script_dir)
 
-def generate_patient_database(num_patients=500, patient_data=None, clinical_ids=None, default_test_date=None):
+from custom_logging import setup_logging
+
+
+def load_patient_data(databases_dir, patient_data_file):
     """
-    Generate a patient database with options for user-defined data.
-    
+    Load patient data from a JSON file in the databases directory.
+
     Args:
-        num_patients (int): Number of patient records to generate if no patient data is provided.
-        patient_data (list of dict): List of dictionaries containing user-defined patient data.
-        clinical_ids (list): List of clinical IDs to randomly select from if not provided in patient_data.
-        default_test_date (str): Default test date in 'YYYY-MM-DD' format if not provided in patient_data.
+        databases_dir (str): Path to the databases directory.
+        patient_data_file (str): Name of the JSON file containing patient data.
 
     Returns:
-        pd.DataFrame: DataFrame containing the patient database.
+        list: List of patient data dictionaries if the file exists, else None.
     """
-    # Find the latest `panelapp_v` database in the working directory
-    db_files = [f for f in os.listdir() if f.startswith("panelapp_v") and f.endswith(".db")]
-    if not db_files:
-        raise FileNotFoundError("No `panelapp_v` database found in the working directory.")
-    
-    # Sort to get the latest file
-    db_files.sort(reverse=True)
-    latest_file = db_files[0]
-    
-    # Extract the version date from the filename
-    version_date = latest_file.split("panelapp_v")[1].split(".")[0]
-    panel_retrieved_date = f"{version_date[:4]}-{version_date[4:6]}-{version_date[6:]}"
+    if not patient_data_file:
+        logging.info("No patient data file specified. Using generated data.")
+        return None
 
-    # Default clinical IDs if none provided
+    patient_data_path = os.path.join(databases_dir, patient_data_file)
+    if os.path.exists(patient_data_path):
+        logging.info(f"Loading patient data from {patient_data_path}")
+        try:
+            with open(patient_data_path, "r") as file:
+                data = pd.read_json(file).to_dict(orient="records")
+
+                # Validate required fields
+                for record in data:
+                    if not all(key in record for key in ["patient_id", "clinical_id", "test_date"]):
+                        raise ValueError(f"Invalid record in patient data: {record}")
+
+                return data
+        except ValueError as ve:
+            logging.error(f"Validation error in patient data: {ve}")
+            raise
+        except Exception as e:
+            logging.error(f"Failed to load patient data from {patient_data_path}: {e}")
+            raise
+    else:
+        logging.info(f"No patient data file found at {patient_data_path}. Using generated data.")
+        return None
+
+
+def generate_patient_database(num_patients, patient_data, clinical_ids=None, default_test_date=None):
+    """
+    Generate a patient database with options for user-defined data.
+    """
+    panel_retrieved_date = datetime.now().strftime("%Y-%m-%d")
+
     if clinical_ids is None:
         clinical_ids = ['R169', 'R419', 'R56', 'R60', 'R62', 'R58', 'R233', 'R39', 'R293', 'R106', 'R330',
                         'R340', 'R414', 'R446', 'R133', 'R83', 'R295', 'R201', 'R19', 'R155', 'R413',
@@ -75,7 +87,7 @@ def generate_patient_database(num_patients=500, patient_data=None, clinical_ids=
                         'R104', 'R76', 'R270', 'R71', 'R38', 'R45', 'R36', 'R424', 'R138, R425', 'R192',
                         'R416', 'R286', 'R93', 'R25', 'R395', 'R125', 'R406', 'R97', 'R228', 'R202', 'R441',
                         'R257', 'R284', 'R170', 'R326', 'R225', 'R121', 'R220', 'R172', 'R20', 'R227']
-        
+
     patients = []
 
     if patient_data:
@@ -84,7 +96,6 @@ def generate_patient_database(num_patients=500, patient_data=None, clinical_ids=
             patient_id = record.get("patient_id", f"Patient_{random.randint(10000000, 99999999)}")
             clinical_id = record.get("clinical_id", random.choice(clinical_ids))
             test_date = record.get("test_date", default_test_date)
-            
             patients.append({
                 "patient_id": patient_id,
                 "clinical_id": clinical_id,
@@ -99,7 +110,6 @@ def generate_patient_database(num_patients=500, patient_data=None, clinical_ids=
             start_of_year = datetime(datetime.now().year, 1, 1)
             random_days = random.randint(0, (datetime.now() - start_of_year).days)
             test_date = (start_of_year + timedelta(days=random_days)).strftime("%Y-%m-%d")
-            
             patients.append({
                 "patient_id": patient_id,
                 "clinical_id": clinical_id,
@@ -112,93 +122,109 @@ def generate_patient_database(num_patients=500, patient_data=None, clinical_ids=
     return patient_df
 
 
-def save_to_database(df, database_name="patient_database.db", table_name="patient_data"):
+def save_to_database(df, databases_dir, database_name, table_name="patient_data"):
     """
-    Save the DataFrame to an SQLite database.
-
-    Args:
-        df (pd.DataFrame): DataFrame to save.
-        database_name (str): SQLite database file name.
-        table_name (str): Name of the table to store the data.
+    Save the DataFrame to an SQLite database in the databases directory.
     """
     try:
-        conn = sqlite3.connect(database_name)
-        logging.info(f"Connected to database '{database_name}'.")
-        
+        # Ensure the databases directory exists
+        os.makedirs(databases_dir, exist_ok=True)
+
+        # Path for the database
+        database_path = os.path.join(databases_dir, database_name)
+
+        # Save data to the database
+        conn = sqlite3.connect(database_path)
+        logging.info(f"Connected to database '{database_path}'.")
+
         # Append the data to the table
         df.to_sql(table_name, conn, if_exists="append", index=False)
-        
-        logging.info(f"Data successfully added to table '{table_name}' in '{database_name}'.")
+
+        logging.info(f"Data successfully added to table '{table_name}' in '{database_path}'.")
         conn.close()
         logging.info("Database connection closed.")
     except Exception as e:
         logging.error(f"An error occurred while saving to the database: {e}")
         raise
 
+
 def parse_arguments():
     """
     Parse command-line arguments for generating the patient database.
     """
-    parser = argparse.ArgumentParser(description="Generate a patient database with optional user input.")
-    
+    parser = argparse.ArgumentParser(description="Generate a patient database.")
+
     parser.add_argument(
-        "--num_patients", 
-        type=int, 
-        default=500, 
-        help="Number of patient records to generate if no input data is provided."
+        "--num_patients",
+        type=int,
+        default=500,
+        help="Number of patient records to generate (default: 500)."
     )
     parser.add_argument(
-        "--clinical_ids", 
-        type=str, 
-        nargs="+", 
-        help="List of clinical IDs to use. Example: R169 R419 R56"
+        "--patient_data_file",
+        type=str,
+        default=None,
+        help="JSON file containing patient data (optional)."
     )
     parser.add_argument(
-        "--default_test_date", 
-        type=str, 
-        help="Default test date in 'YYYY-MM-DD' format if not provided in patient_data."
+        "--database_name",
+        type=str,
+        default="patient_database.db",
+        help="Name of the SQLite database file (default: patient_database.db)."
     )
     parser.add_argument(
-        "--patient_data", 
-        type=str, 
-        help="Path to a JSON file containing user-defined patient data. Each record should include 'patient_id', 'clinical_id', and 'test_date'."
+        "--default_test_date",
+        type=str,
+        default=None,
+        help="Default test date in 'YYYY-MM-DD' format for generated patients."
     )
+
     return parser.parse_args()
 
 
 def main():
     """
-    Main function to generate and store the patient database based on user input or defaults.
+    Main function to generate and store the patient database.
     """
-    setup_logging()
-    logging.info("Script started.")
+    try:
+        # Parse arguments
+        args = parse_arguments()
 
-    args = parse_arguments()
+        # Define directories
+        script_dir = os.path.abspath(os.path.dirname(__file__))
+        project_dir = os.path.abspath(os.path.join(script_dir, "..", ".."))
+        logs_dir = os.path.join(project_dir, "logs")
+        databases_dir = os.path.join(project_dir, "databases")
 
-    # Load patient data from JSON if provided
-    patient_data = None
-    if args.patient_data:
-        try:
-            with open(args.patient_data, "r") as f:
-                patient_data = json.load(f)
-            logging.info(f"Loaded patient data from {args.patient_data}.")
-        except Exception as e:
-            logging.error(f"Failed to load patient data from {args.patient_data}: {e}")
-            return
+        # Set up centralized logging using custom_logging
+        setup_logging(
+            logs_dir=logs_dir,
+            info_log_file="patient_build_info.log",
+            error_log_file="patient_build_error.log"
+        )
 
-    # Generate the patient database
-    patient_df = generate_patient_database(
-        num_patients=args.num_patients,
-        patient_data=patient_data,
-        clinical_ids=args.clinical_ids,
-        default_test_date=args.default_test_date,
-    )
+        logging.info("Patient database script started.")
 
-    # Save to SQLite database
-    save_to_database(patient_df)
+        # Load patient data if provided
+        patient_data = load_patient_data(databases_dir, args.patient_data_file)
 
-    logging.info("Script completed successfully.")
+        # Generate the patient database
+        patient_df = generate_patient_database(
+            num_patients=args.num_patients,
+            patient_data=patient_data,
+            default_test_date=args.default_test_date
+        )
+
+        # Save to SQLite database
+        save_to_database(patient_df, databases_dir=databases_dir, database_name=args.database_name)
+
+        logging.info("Patient database script completed successfully.")
+
+    except Exception as e:
+        logging.error(f"An error occurred in the patient database script: {e}")
+        raise
 
 
 if __name__ == "__main__":
     main()
+

@@ -1,0 +1,4 @@
+[
+    {"patient_id": "Patient_12345678", "clinical_id": "R169", "test_date": "2024-01-01"},
+    {"patient_id": "Patient_23456789", "clinical_id": "R419", "test_date": "2024-01-02"}
+]

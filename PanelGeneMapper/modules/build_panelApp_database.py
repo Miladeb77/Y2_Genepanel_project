@@ -8,6 +8,12 @@ from datetime import datetime
 import gzip
 from tempfile import NamedTemporaryFile
 import re
+import sys
+
+script_dir = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(script_dir)
+
+from custom_logging import setup_logging
 
 def set_working_directory():
     """
@@ -29,80 +35,98 @@ def set_working_directory():
         logging.error(f"Failed to set working directory: {e}")
         raise
 
-def setup_logging(script_dir, info_log_file="build_panelApp_db_info_log.log", error_log_file="build_panelApp_db_error_log.log"):
-    """
-    Configure logging settings for the script, directing output to separate files for INFO and ERROR levels.
-    
-    Args:
-        script_dir (str): The directory path where the script is located.
-        info_log_file (str): The file name for INFO level logging output.
-        error_log_file (str): The file name for ERROR level logging output.
-        
-    Logs:
-        Info-level message that logging has started.
-    """
-    # Set log file paths relative to the provided script directory
-    info_log_path = os.path.join(script_dir, info_log_file)
-    error_log_path = os.path.join(script_dir, error_log_file)
+# def setup_logging(logs_dir="logs", info_log_file="build_panelApp_db_info_log.log", error_log_file="build_panelApp_db_error_log.log"):
+#     """
+#     Configure logging settings for the script, directing output to separate files for INFO and ERROR levels.
 
-    # Get the root logger
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)  # Set the root logger level to DEBUG to capture all messages
+#     Args:
+#         logs_dir (str): The subdirectory for storing log files, relative to two levels above the script directory.
+#         info_log_file (str): The file name for INFO level logging output.
+#         error_log_file (str): The file name for ERROR level logging output.
 
-    # Remove existing handlers to avoid duplicate logs or conflicts
-    for handler in logger.handlers[:]:
-        logger.removeHandler(handler)
+#     Logs:
+#         Info-level message that logging has started.
+#     """
+#     try:
+#         # Define the base directory two levels up
+#         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+#         logs_path = os.path.join(base_dir, logs_dir)
 
-    # Logger for INFO and above messages
-    info_handler = logging.FileHandler(info_log_path)
-    info_handler.setLevel(logging.INFO)
-    info_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-    logger.addHandler(info_handler)
+#         # Ensure the logs directory exists
+#         os.makedirs(logs_path, exist_ok=True)
 
-    # Logger for ERROR and above messages
-    error_handler = logging.FileHandler(error_log_path)
-    error_handler.setLevel(logging.ERROR)
-    error_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-    logger.addHandler(error_handler)
+#         # Set log file paths relative to the logs directory
+#         info_log_path = os.path.join(logs_path, info_log_file)
+#         error_log_path = os.path.join(logs_path, error_log_file)
 
-    # Console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-    console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-    logger.addHandler(console_handler)
+#         # Get the root logger
+#         logger = logging.getLogger()
+#         logger.setLevel(logging.DEBUG)  # Set the root logger level to DEBUG to capture all messages
 
-    logging.info("Logging setup complete.")
+#         # Remove existing handlers to avoid duplicate logs or conflicts
+#         for handler in logger.handlers[:]:
+#             logger.removeHandler(handler)
+
+#         # Logger for INFO and above messages
+#         info_handler = logging.FileHandler(info_log_path)
+#         info_handler.setLevel(logging.INFO)
+#         info_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+#         logger.addHandler(info_handler)
+
+#         # Logger for ERROR and above messages
+#         error_handler = logging.FileHandler(error_log_path)
+#         error_handler.setLevel(logging.ERROR)
+#         error_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+#         logger.addHandler(error_handler)
+
+#         # Console handler
+#         console_handler = logging.StreamHandler()
+#         console_handler.setLevel(logging.INFO)
+#         console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+#         logger.addHandler(console_handler)
+
+#         logging.info("Logging setup complete.")
+#         logging.info(f"Logs will be written to {logs_path}")
+#     except Exception as e:
+#         raise RuntimeError(f"Failed to set up logging: {e}")
+
+
+
 
 def load_config(config_file="build_panelApp_database_config.json"):
     """
-    Load configuration settings from a JSON file.
-    
+    Load configuration settings from a JSON file located in the 'Y2_Genepanel_project/configuration' directory.
+
     Args:
-        config_file (str): Path to the configuration file.
-    
+        config_file (str): Name of the configuration file.
+
     Returns:
         dict: Configuration settings loaded from the file.
-    
+
     Raises:
         FileNotFoundError: If the configuration file is not found.
         json.JSONDecodeError: If the configuration file is not valid JSON.
     """
     try:
-        # Get the path to the directory containing this script
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        # Construct the full path to the configuration file
-        config_path = os.path.join(script_dir, "..", "config", config_file)
-        logging.info(f"Attempting to load configuration from {config_file}")
-        with open(config_file, "r") as f:
+        # Get the path two directories up
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+        config_dir = os.path.join(base_dir, "configuration")
+        config_path = os.path.join(config_dir, config_file)
+
+        logging.info(f"Attempting to load configuration from {config_path}")
+        with open(config_path, "r") as f:
             config = json.load(f)
+
         logging.info("Configuration successfully loaded.")
         return config
     except FileNotFoundError:
-        logging.error(f"Configuration file {config_file} not found.")
+        logging.error(f"Configuration file {config_file} not found in {config_dir}.")
         raise
     except json.JSONDecodeError:
         logging.error("Configuration file is not in valid JSON format.")
         raise
+
+
 
 def initialize_api(config):
     """
@@ -375,34 +399,40 @@ def save_to_database(df, script_dir, table_name="panel_info"):
         
         logging.info("Starting to save data to the SQLite database.")
         
+        # Define the directories
+        project_dir = os.path.abspath(os.path.join(script_dir, "..", ".."))
+        databases_dir = os.path.join(project_dir, "databases")
+        archive_dir = os.path.join(project_dir, "archive_databases")
+        os.makedirs(databases_dir, exist_ok=True)
+        os.makedirs(archive_dir, exist_ok=True)
+
+        # Generate the database name
         date_str = datetime.now().strftime("%Y%m%d")
         database_name = f"panelapp_v{date_str}.db"
-        logging.info(f"Database name set to: {database_name}")
+        database_path = os.path.join(databases_dir, database_name)
+        logging.info(f"Database path set to: {database_path}")
 
-        archive_folder = os.path.join(script_dir, "archive_databases")
-        os.makedirs(archive_folder, exist_ok=True)
-        logging.info(f"Archive folder located at: {archive_folder}")
+        # Archive old databases
+        files_in_directory = os.listdir(databases_dir)
+        for db_file in files_in_directory:
+            if db_file.startswith("panelapp_v") and db_file.endswith(".db") and db_file != database_name:
+                old_db_path = os.path.join(databases_dir, db_file)
+                archived_db_path = os.path.join(archive_dir, db_file)
+                os.rename(old_db_path, archived_db_path)
+                
+                # Compress the archived file
+                with open(archived_db_path, 'rb') as f_in, gzip.open(f"{archived_db_path}.gz", 'wb') as f_out:
+                    f_out.writelines(f_in)
+                os.remove(archived_db_path)
+        logging.info("Archived and compressed old database files.")
 
-        files_in_directory = os.listdir(script_dir)
-        if any(db_file.startswith("panelapp_v") and db_file.endswith(".db") and db_file != database_name for db_file in files_in_directory):
-            for db_file in files_in_directory:
-                if db_file.startswith("panelapp_v") and db_file.endswith(".db") and db_file != database_name:
-                    old_db_path = os.path.join(script_dir, db_file)
-                    archived_db_path = os.path.join(archive_folder, db_file)
-                    
-                    os.rename(old_db_path, archived_db_path)
-                    with open(archived_db_path, 'rb') as f_in, gzip.open(f"{archived_db_path}.gz", 'wb') as f_out:
-                        f_out.writelines(f_in)
-                    os.remove(archived_db_path)
-            logging.info("Archived and compressed old database files.")
-
-        conn = sqlite3.connect(database_name)
-        logging.info(f"Connected to database '{database_name}'")
+        # Save the new database
+        conn = sqlite3.connect(database_path)
+        logging.info(f"Connected to database '{database_path}'")
         df.to_sql(table_name, conn, if_exists="replace", index=False)
-        logging.info(f"Data successfully saved to table '{table_name}' in '{database_name}'")
-        
+        logging.info(f"Data successfully saved to table '{table_name}' in '{database_path}'")
         conn.close()
-        logging.info(f"Database connection to '{database_name}' closed.")
+        logging.info(f"Database connection to '{database_path}' closed.")
         
     except sqlite3.DatabaseError as e:
         logging.error(f"Database error occurred while saving data: {e}")
@@ -414,37 +444,26 @@ def save_to_database(df, script_dir, table_name="panel_info"):
         logging.error(f"An unexpected error occurred while saving data to the database: {e}")
         raise
 
+
 def main():
     """
     Main function to initialize environment, retrieve and process data, and save it to the database.
-    
     Logs:
         Any errors occurring during script execution.
     """
-
-    # Temporary logging setup
-    temp_log_file = NamedTemporaryFile(delete=False, suffix=".log").name
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[logging.FileHandler(temp_log_file), logging.StreamHandler()]
-    )
-    logging.info("Temporary logging setup complete.")
-
     try:
-        # Set the working directory and get the script directory
-        script_dir = set_working_directory()
+        # Set up centralized logging
+        setup_logging(
+            logs_dir="logs", 
+            info_log_file="panelapp_info.log", 
+            error_log_file="panelapp_error.log"
+        )
 
-        # Pass the script directory to setup_logging
-        setup_logging(script_dir)
+        logging.info("Script started successfully.")
 
-        # Merge temporary logs into the main log file
-        with open(temp_log_file, 'r') as temp_log:
-            temp_log_contents = temp_log.read()
-            logging.info("---- Temporary Logs Start ----\n" + temp_log_contents + "---- Temporary Logs End ----")
-
-        # Remove the temporary log file
-        os.remove(temp_log_file)
+        # Set the working directory
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        os.chdir(script_dir)
 
         # Load configuration and initialize the API
         config = load_config()
@@ -461,6 +480,7 @@ def main():
     except Exception as e:
         logging.error(f"An error occurred during script execution: {e}")
         raise
+
 
 # Run the main function if this file is executed
 if __name__ == "__main__":

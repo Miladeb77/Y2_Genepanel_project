@@ -1,3 +1,0 @@
-Mocks external dependencies: It patches filesystem and API calls to avoid actual interactions with the file system or network.
-Validates functionality: Each function's core functionality is tested independently.
-Includes edge cases: Tests scenarios like missing configuration keys or empty responses.
