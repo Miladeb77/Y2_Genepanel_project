@@ -2,7 +2,7 @@ import sqlite3
 import logging
 import pandas as pd
 import os
-from build_patient_database import save_to_database
+#from build_patient_database import save_to_database
 
 
 def get_databases_dir():

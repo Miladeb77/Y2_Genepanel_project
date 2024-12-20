@@ -1,0 +1,10 @@
+2024-12-20 21:36:39,399 - INFO - Logging setup complete.
+2024-12-20 21:36:39,399 - INFO - Logs will be written to C:\Users\nourm\Project\group_project\github_release\Y2_Genepanel_project\logs
+2024-12-20 21:36:39,399 - INFO - Patient database script started.
+2024-12-20 21:36:39,399 - INFO - No patient data file specified. Using generated data.
+2024-12-20 21:36:39,399 - INFO - Generating random patient data.
+2024-12-20 21:36:39,405 - INFO - Patient database generated successfully.
+2024-12-20 21:36:39,405 - INFO - Connected to database 'C:\Users\nourm\Project\group_project\github_release\Y2_Genepanel_project\databases\patient_database.db'.
+2024-12-20 21:36:39,422 - INFO - Data successfully added to table 'patient_data' in 'C:\Users\nourm\Project\group_project\github_release\Y2_Genepanel_project\databases\patient_database.db'.
+2024-12-20 21:36:39,422 - INFO - Database connection closed.
+2024-12-20 21:36:39,423 - INFO - Patient database script completed successfully.
