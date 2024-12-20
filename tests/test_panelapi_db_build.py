@@ -35,16 +35,22 @@ class TestBuildPanelAppDatabase(TestCase):
         with patch("os.path.join", side_effect=lambda *args: "/".join(args)) as mock_join, \
              patch("logging.FileHandler") as mock_file_handler, \
              patch("logging.StreamHandler") as mock_stream_handler:
-
-            mock_file_handler.return_value = MagicMock()
-            mock_stream_handler.return_value = MagicMock()
-
+                 
+            mock_file_handler_instance = MagicMock()
+            mock_file_handler_instance.level = logging.DEBUG
+            mock_file_handler.return_value = mock_file_handler_instance
+            
+            mock_stream_handler_instance = MagicMock()
+            mock_stream_handler_instance.level = logging.DEBUG
+            mock_stream_handler.return_value = mock_stream_handler_instance
+                 
             script_dir = "/mock/script/path"
             setup_logging(script_dir)
-
+            # Verify handlers are created and configured
             mock_join.assert_called()
             mock_file_handler.assert_called()
             mock_stream_handler.assert_called()
+
 
     def test_load_config(self):
         """Test if the configuration file is loaded correctly."""
