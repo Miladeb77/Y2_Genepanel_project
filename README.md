@@ -22,10 +22,10 @@ The application is designed to run from the project’s root. If you move it int
 - Put all frontend files (e.g., index.html, script.js, style.css) in a folder called static/ in the root directory.
 Flask uses app.static_folder to serve static content. This folder name should not be changed for the default setup.
 
--	Include a config/ directory in the root directory and place app_config.json inside it.
+-	Include a configuration/ directory in the root directory and place app_config.json inside it.
 The file name must remain app_config.json, as app.py looks specifically for this name.
 
--	You may also place build_panelApp_database_config.json in the same config/ folder if your application needs it.
+-	You may also place build_panelApp_database_config.json in the same configuration/ folder if your application needs it.
   
 -	Use the provided naming convention and structure
 This ensures that your environment, logs, and config files are all located where the application expects them.
@@ -35,7 +35,7 @@ This ensures that your environment, logs, and config files are all located where
 A sample folder layout reflecting these requirements:
 
     Y2_Genepanel_project/
-    ├── config/
+    ├── configuration/
     │   ├── app_config.json
     │   └── build_panelApp_database_config.json
     ├── logs/
@@ -52,9 +52,9 @@ A sample folder layout reflecting these requirements:
 
 -	app.py: Main Flask application (must be at the root).
   
--	config/app_config.json: Primary config file for the Flask app.
+-	configuration/app_config.json: Primary config file for the Flask app.
   
--	config/build_panelApp_database_config.json: Contains additional PanelApp API settings (server URL, headers, etc.).
+-	configuration/build_panelApp_database_config.json: Contains additional PanelApp API settings (server URL, headers, etc.).
   
 -	logs/Flask_app_logs/: Stores info_log.log and error_log.log.
   
@@ -100,7 +100,6 @@ A sample folder layout reflecting these requirements:
   
 -  Console output also shows INFO and above for real-time monitoring.
 
-## Configuration
 
 ### Logging
 
@@ -112,11 +111,11 @@ A sample folder layout reflecting these requirements:
   
 ### Database Paths
 
--  Defined in ./config/app_config.json.
+-  Defined in ./configuration/app_config.json.
   
 -  Make sure patient_db_path points to a valid SQLite file with a patient_data table.
   
--  Panel_dir must contain your PanelApp .db files (named like panelapp_vYYYYMMDD.db).
+-  Panel_dir must contain your PanelApp .db files (named like panelapp_vYYYYMMDD.db) and the archived databases ending with .gz.
 
 ### Valid R-codes File
 
@@ -126,7 +125,7 @@ A sample folder layout reflecting these requirements:
   
 ### PanelApp API Config
 
--  Located in config/build_panelApp_database_config.json.
+-  Located in configuration/build_panelApp_database_config.json.
   
 -  Typically has:
 
