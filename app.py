@@ -1709,7 +1709,7 @@ if __name__ == '__main__':
     # Step 2: Load configuration from a JSON file
     try:
         # Load configuration from the specified path
-        config = load_config("./config/app_config.json")  # Function reads and parses JSON
+        config = load_config("./configuration/app_config.json")  # Function reads and parses JSON
 
         # Extract key configuration variables
         patient_db_path = config["patient_db_path"]  # Path to the patient database
