@@ -833,7 +833,7 @@ def get_hgnc_ids_for_r_code(r_code):
     """
     try:
         # Step 1: Load main application configuration
-        app_config = load_config("./config/app_config.json")
+        app_config = load_config("./configuration/app_config.json")
         # Retrieve the path to `build_panelApp_database_config.json` from the main config
         build_panel_config_path = app_config["build_panelApp_database_config.json"]
 
