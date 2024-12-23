@@ -56,9 +56,9 @@ def compare_panel_versions():
         # Find the latest PanelApp database in the databases directory
         db_files = [f for f in os.listdir(databases_dir) if f.startswith("panelapp_v") and f.endswith(".db")]
         if not db_files:
-            logging.error(f"No `panelapp_v` database found in the databases directory: {databases_dir}")
+            logging.error("No `panelapp_v` database found in the working directory.")
             return
-
+        
         # Sort and select the latest version
         db_files.sort(reverse=True)
         latest_db = db_files[0]
@@ -90,10 +90,8 @@ def compare_panel_versions():
             indicator=True,
         )
 
-        # Identify differences
-        differences = merged_df[
-            (merged_df["_merge"] != "both") | (merged_df["version_local"] != merged_df["version_api"])
-        ]
+        # Find differences
+        differences = merged_df[merged_df["_merge"] != "both"]
 
         if not differences.empty:
             logging.warning("Differences found between local and API versions:")
@@ -103,6 +101,7 @@ def compare_panel_versions():
 
     except Exception as e:
         logging.error(f"An error occurred during comparison: {e}")
+
 
 
 if __name__ == "__main__":
