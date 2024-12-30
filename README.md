@@ -22,6 +22,10 @@
    ```bash
    pip install -r requirements.txt
    ```
+3. Navigate to the PanelGeneMapper directory
+   ```bash
+   cd Y2_Genepanel_project/PanelGeneMapper
+   ```
 
 ---
 
@@ -42,7 +46,7 @@ This script will:
 ### 2. Integrate Patient Data
 Use the `build_patient_database` module to create a patient database and integrate it with the PanelApp database:
 ```bash
-python -m PanelGeneMapper.modules.build_patient_database --num_patients 1000
+python -m modules.build_patient_database --num_patients 1000
 ```
 Options:
 - `--num_patients`: Number of random patients to generate (default: 500).
@@ -56,7 +60,7 @@ Options:
 ### 3. Build the latest panelapp database
 Use the `build_panelApp_database` module to create a patient database and integrate it with the PanelApp database:
 ```bash
-python -m PanelGeneMapper.modules.build_panelApp_database
+python -m modules.build_panelApp_database
 ```
 Options:
 
@@ -79,8 +83,13 @@ Other available commands:
 - `add_patient`: Add a new patient.
 
 ---
-
 ### 5. Schedule Updates
+Check for updates on panelapp
+```bash
+python panelgenemapper.py compare_with_api
+```
+
+### 6. Schedule Updates
 Schedule periodic updates using the `panelgenemapper.py` script:
 ```bash
 python panelgenemapper.py update
@@ -92,21 +101,34 @@ python panelgenemapper.py update
 
 ```
 Y2_Genepanel_project/
-├── tests/                        # Tests
+├── configuration/
+    ├── build_panelApp_database_config.json
+├── databases/
+    ├── panelapp_v20241223.db
+    ├── patient_database.db
+    ├── local_patient_database.json
+├── archive_databases/
+    ├── panelapp_v20241220.db.gz
+├── PanelGeneMapper/
+    ├── modules/
+       ├── __init__.py                # Makes the folder a Python package
+       ├── build_patient_database.py  # Functions for handling patient database
+       ├── build_panelApp_database.py # Functions for handling PanelApp database
+       ├── database_utils.py          # Shared database-related utilities
+       ├── logging_utils.py           # Logging setup and utilities
+       ├── panelapp_api.py            # Functions for interacting with the PanelApp API
     ├── __init__.py
-    ├── test_panelapi_db_build.py
+    ├── panelgenemapper.py             # Main script (contains argparse and main function)
+├── tests/                        
+    ├── __init__.py
+    ├── test_api_ensembl.py
+    ├── test_build_panelApp_database.py
+    ├── test_build_patient_database.py
+    ├── test_check_panel_updates.py
+    ├── test_custom_logging
 ├── environment.yml                # Dependencies and environment configuration
+├── requirement.txt
 ├── README.md                      # Documentation
-PanelGeneMapper/
-├── modules/
-│   ├── __init__.py                # Makes the folder a Python package
-│   ├── build_patient_database.py  # Functions for handling patient database
-│   ├── build_panelApp_database.py # Functions for handling PanelApp database
-│   ├── database_utils.py          # Shared database-related utilities
-│   ├── logging_utils.py           # Logging setup and utilities
-│   ├── panelapp_api.py            # Functions for interacting with the PanelApp API
-├── __init__.py
-├── panelgenemapper.py             # Main script (contains argparse and main function)
 
 ```
 
