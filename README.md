@@ -83,13 +83,13 @@ Other available commands:
 - `add_patient`: Add a new patient.
 
 ---
-### 5. Schedule Updates
+### 5. Check For Updates
 Check for updates on panelapp
 ```bash
 python panelgenemapper.py compare_with_api
 ```
 
-### 6. Schedule Updates
+### 6. Run Updates
 Schedule periodic updates using the `panelgenemapper.py` script:
 ```bash
 python panelgenemapper.py update
