@@ -1,6 +1,6 @@
 import pytest
 import os
-from ensembl_package.api_ensembl import *
+from PanelGeneMapper.modules.make_bed_file import *
 
 def test_get_mane_exon_data_success():
     """
