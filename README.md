@@ -76,12 +76,34 @@ Use the `panelgenemapper.py` script to:
 ```bash
 python panelgenemapper.py retrieve_genes --r_code R169 --output_file gene_list.csv
 ```
+```bash
+python panelgenemapper.py retrieve_genes --patient_id Patient_85969552
+```
+```bash
+python panelgenemapper.py retrieve_genes --r_code R420 --patient_id Patient_85969552
+```
+
+#### Example: Generate a Bed File
+```bash
+python panelgenemapper.py retrieve_genes generate_bed --csv_file Y2_Genepanel_project/output/gene_list.csv
+```
+```bash
+python panelgenemapper.py retrieve_genes generate_bed --r_code R420
+```
+```bash
+python panelgenemapper.py retrieve_genes generate_bed --patient_id Patient_85969552
+```
+```bash
+python panelgenemapper.py retrieve_genes generate_bed --r_code R420 --patient_id Patient_85969552
+```
 
 Other available commands:
 - `update`: Update the PanelApp database.
 - `list_patients`: List all patients in the database.
 - `add_patient`: Add a new patient.
-
+- `retrieve_genes`: Retrieve gene lists for specific R codes or patient IDs.
+- `compare_with_api`: Compare the local PanelApp database with the latest API data.
+- `generate_bed`: Generate BED file from Ensembl IDs.
 ---
 ### 5. Check For Updates
 Check for updates on panelapp
