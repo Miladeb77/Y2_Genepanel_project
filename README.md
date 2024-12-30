@@ -85,16 +85,16 @@ python panelgenemapper.py retrieve_genes --r_code R420 --patient_id Patient_8596
 
 #### Example: Generate a Bed File
 ```bash
-python panelgenemapper.py retrieve_genes generate_bed --csv_file Y2_Genepanel_project/output/gene_list.csv
+python panelgenemapper.py generate_bed --csv_file Y2_Genepanel_project/output/gene_list.csv
 ```
 ```bash
-python panelgenemapper.py retrieve_genes generate_bed --r_code R420
+python panelgenemapper.py generate_bed --r_code R420
 ```
 ```bash
-python panelgenemapper.py retrieve_genes generate_bed --patient_id Patient_85969552
+python panelgenemapper.py generate_bed --patient_id Patient_85969552
 ```
 ```bash
-python panelgenemapper.py retrieve_genes generate_bed --r_code R420 --patient_id Patient_85969552
+python panelgenemapper.py generate_bed --r_code R420 --patient_id Patient_85969552
 ```
 
 Other available commands:
