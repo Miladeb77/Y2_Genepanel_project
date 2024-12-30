@@ -15,7 +15,7 @@
 ### Steps
 1. Clone the repository or download the source code:
    ```bash
-  git clone https://github.com/Miladeb77/Y2_Genepanel_project.git
+   git clone https://github.com/Miladeb77/Y2_Genepanel_project.git
    ```
 
 2. Install the dependencies using the provided `environment.yml` file:
