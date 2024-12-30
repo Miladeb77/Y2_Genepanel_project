@@ -101,14 +101,6 @@ python panelgenemapper.py update
 
 ```
 Y2_Genepanel_project/
-├── configuration/
-    ├── build_panelApp_database_config.json
-├── databases/
-    ├── panelapp_v20241223.db
-    ├── patient_database.db
-    ├── local_patient_database.json
-├── archive_databases/
-    ├── panelapp_v20241220.db.gz
 ├── PanelGeneMapper/
     ├── modules/
        ├── __init__.py                # Makes the folder a Python package
@@ -119,6 +111,14 @@ Y2_Genepanel_project/
        ├── panelapp_api.py            # Functions for interacting with the PanelApp API
     ├── __init__.py
     ├── panelgenemapper.py             # Main script (contains argparse and main function)
+├── configuration/
+    ├── build_panelApp_database_config.json
+├── databases/
+    ├── panelapp_v20241223.db
+    ├── patient_database.db
+    ├── local_patient_database.json
+├── archive_databases/
+    ├── panelapp_v20241220.db.gz
 ├── tests/                        
     ├── __init__.py
     ├── test_api_ensembl.py
