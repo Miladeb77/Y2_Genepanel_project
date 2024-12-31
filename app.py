@@ -14,6 +14,9 @@ import requests
 # Initialize the Flask app and specify the static folder for serving files
 app = Flask(__name__, static_folder='static')
 
+# Directory where logs will be stored
+LOG_DIR = "./logs/Flask_app_logs"  
+
 def setup_logging():
     """
     Sets up logging for the application.
@@ -35,8 +38,6 @@ def setup_logging():
     -------
     None
     """
-    # Directory where logs will be stored
-    LOG_DIR = "./logs/Flask_app_logs"  
 
     # Ensure the logging directory exists, creating it if necessary
     os.makedirs(LOG_DIR, exist_ok=True)
@@ -122,6 +123,25 @@ def load_config(config_file_path):
         # Re-raise the exception to propagate it to the caller
         raise
 
+# ----------------######### Module-Level Configuration Loading #########----------------
+
+# Initialize logging
+setup_logging()
+logging.info("Starting the Flask application setup...")
+
+# Load configuration from a JSON file at module level
+try:
+    config = load_config("./configuration/app_config.json")  # Function reads and parses JSON
+
+    # Assign configuration variables to app.config for global access
+    app.config['PATIENT_DB_PATH'] = config["patient_db_path"]  # Path to the patient database
+    app.config['PANEL_DIR'] = config["panel_dir"]  # Directory containing PanelApp databases
+    app.config['R_CODE_FILE'] = config["r_code_file"]  # File containing valid R codes
+
+    logging.info(f"Configuration loaded. Patient DB Path: {app.config['PATIENT_DB_PATH']}, Panel Directory: {app.config['PANEL_DIR']}")
+except Exception as e:
+    logging.critical(f"Failed to load configuration: {e}")
+    exit(1)  # Ensure the application does not start without valid configuration
 
 ######################### Helper Functions ###############################
 
@@ -502,6 +522,7 @@ def get_patient_data(patient_id, db_path):
     >>> get_patient_data("Patient_123", "/path/to/database.db")
     [(1, 'Patient_123', 'Condition_A', '2024-12-18'), (2, 'Patient_123', 'Condition_B', '2024-12-19')]
     """
+    
     try:
         # Log the start of the query process
         logging.info(f"Fetching data for patient ID: {patient_id}")
@@ -1061,7 +1082,7 @@ def fetch_patient_data():
 
         # Step 4: Query the database for records matching the patient ID
         logging.info(f"Searching for records for Patient ID: {patient_id}")
-        records = get_patient_data(patient_id, patient_db_path)
+        records = get_patient_data(patient_id, app.config['PATIENT_DB_PATH'])
 
         # Step 5: If no records are found, prompt the user to provide an R Code
         if not records:
@@ -1077,7 +1098,7 @@ def fetch_patient_data():
         with Pool() as pool:
             results = pool.starmap(
                 process_patient_record,
-                [(record, panel_dir) for record in records]
+                [(record, app.config['PANEL_DIR']) for record in records]
             )
 
         # Step 7: Log the processed data and return it as a JSON response
@@ -1158,7 +1179,7 @@ def create_single_patient_record():
             }), 404
 
         # Step 3: Load valid R Codes from the file and validate the provided R Code
-        with open(r_code_file, "r") as f:
+        with open(app.config['R_CODE_FILE'], "r") as f:
             valid_r_codes = {line.strip() for line in f.readlines()}  # Load valid R Codes into a set
 
         if r_code not in valid_r_codes:
@@ -1174,8 +1195,8 @@ def create_single_patient_record():
 
         try:
             # Step 5: Attempt to retrieve the most recent PanelApp database
-            panel_retrieved_date = find_most_recent_panel_date(panel_dir)
-            panel_db_path = find_most_recent_panel_db(panel_dir)
+            panel_retrieved_date = find_most_recent_panel_date(app.config['PANEL_DIR'])
+            panel_db_path = find_most_recent_panel_db(app.config['PANEL_DIR'])
 
             # Step 6: Extract genes and metadata for the R Code from the database
             genes, hgnc_ids, version_created = extract_genes_and_metadata_from_panel(panel_db_path, r_code)
@@ -1192,7 +1213,7 @@ def create_single_patient_record():
                 max_iterations = 1000  # Set a safety limit for iterations
                 iteration_count = 0
 
-                for dirpath, _, filenames in os.walk(panel_dir):
+                for dirpath, _, filenames in os.walk(app.config['PANEL_DIR']):
                     for file in filenames:
                         if file.endswith(".db.gz"):
                             panel_db_path = os.path.join(dirpath, file)
@@ -1201,9 +1222,6 @@ def create_single_patient_record():
                             if iteration_count > max_iterations:
                                 logging.error("Exceeded maximum iterations while searching for databases.")
                                 raise RuntimeError("Exceeded maximum iterations while searching for databases.")
-
-                            # Decompress the database file if needed
-                            decompressed_db_path = decompress_if_needed(panel_db_path)
 
                             # Attempt to extract gene data from the database
                             genes, hgnc_ids, version_created = extract_genes_and_metadata_from_panel(panel_db_path, r_code)
@@ -1226,7 +1244,7 @@ def create_single_patient_record():
                 }), 404
 
             # Step 9: Add the new patient record to the database
-            add_patient_record(patient_id, r_code, inserted_date, panel_retrieved_date, patient_db_path)
+            add_patient_record(patient_id, r_code, inserted_date, panel_retrieved_date, app.config['PATIENT_DB_PATH'])
 
             # Step 10: Return success response with the new record details
             logging.info(f"New record created for Patient ID {patient_id} with R Code {r_code}")
@@ -1313,7 +1331,7 @@ def fetch_rcode_data():
 
         # Step 2: Validate the R Code against the file of valid R Codes
         logging.info(f"Validating R Code: {r_code}")
-        with open(r_code_file, "r") as f:
+        with open(app.config['R_CODE_FILE'], "r") as f:
             valid_r_codes = {line.strip() for line in f.readlines()}  # Load valid R Codes into a set
 
         if r_code not in valid_r_codes:
@@ -1326,7 +1344,7 @@ def fetch_rcode_data():
 
         # Step 3: Fetch records associated with the R Code from the database
         logging.info(f"Fetching records for R Code: {r_code}")
-        records = get_r_code_data(r_code, patient_db_path)
+        records = get_r_code_data(r_code, app.config['PATIENT_DB_PATH'] )
 
         if not records:
             # Log and return a structured response if no records are found
@@ -1348,7 +1366,7 @@ def fetch_rcode_data():
             with Pool() as pool:
                 results = pool.starmap(
                     process_patient_record,
-                    [(record, panel_dir) for record in records]
+                    [(record, app.config['PANEL_DIR']) for record in records]
                 )
             # Return processed records as a JSON response
             logging.info(f"Processed {len(results)} records for R Code: {r_code}")
@@ -1448,8 +1466,8 @@ def handle_rcode():
             for patient_id in patient_ids:
                 try:
                     # Use the most recent PanelApp database
-                    panel_retrieved_date = find_most_recent_panel_date(panel_dir)
-                    panel_db_path = find_most_recent_panel_db(panel_dir)
+                    panel_retrieved_date = find_most_recent_panel_date(app.config['PANEL_DIR'])
+                    panel_db_path = find_most_recent_panel_db(app.config['PANEL_DIR'])
 
                     # Attempt to extract the gene panel and metadata for the R Code
                     genes, hgnc_ids, version_created = extract_genes_and_metadata_from_panel(panel_db_path, r_code)
@@ -1467,7 +1485,7 @@ def handle_rcode():
                         max_iterations = 1000  # Safety limit for iterations
                         iteration_count = 0
 
-                        for dirpath, _, filenames in os.walk(panel_dir):
+                        for dirpath, _, filenames in os.walk(app.config['PANEL_DIR']):
                             for file in filenames:
                                 if file.endswith(".db.gz"):
                                     panel_db_path = os.path.join(dirpath, file)
@@ -1476,9 +1494,6 @@ def handle_rcode():
                                     if iteration_count > max_iterations:
                                         logging.error("Exceeded maximum iterations while searching for databases.")
                                         raise RuntimeError("Exceeded maximum iterations while searching for databases.")
-
-                                    # Decompress the database file if needed
-                                    decompressed_db_path = decompress_if_needed(panel_db_path)
 
                                     # Try extracting gene data
                                     genes, hgnc_ids, version_created = extract_genes_and_metadata_from_panel(panel_db_path, r_code)
@@ -1501,7 +1516,7 @@ def handle_rcode():
                         }), 404
 
                     # Add the new patient record to the database
-                    add_patient_record(patient_id, r_code, inserted_date, panel_retrieved_date, patient_db_path)
+                    add_patient_record(patient_id, r_code, inserted_date, panel_retrieved_date, app.config['PATIENT_DB_PATH'])
 
                     # Append the new record to the response
                     new_records.append({
@@ -1702,28 +1717,7 @@ if __name__ == '__main__':
     >>> INFO:root:Configuration loaded. Patient DB Path: /path/to/db, Panel Directory: /path/to/panel_dir
     >>> INFO:root:Starting Flask application...
     """
-    # Step 1: Initialize logging to capture application activity
-    setup_logging()  # Configure logging to capture INFO and ERROR messages
-    logging.info("Starting the Flask application setup...")  # Log the startup process
 
-    # Step 2: Load configuration from a JSON file
-    try:
-        # Load configuration from the specified path
-        config = load_config("./configuration/app_config.json")  # Function reads and parses JSON
-
-        # Extract key configuration variables
-        patient_db_path = config["patient_db_path"]  # Path to the patient database
-        panel_dir = config["panel_dir"]  # Directory containing PanelApp databases
-        r_code_file = config["r_code_file"]  # File containing valid R codes
-
-        # Log the loaded configuration details for debugging purposes
-        logging.info(f"Configuration loaded. Patient DB Path: {patient_db_path}, Panel Directory: {panel_dir}")
-    except Exception as e:
-        # Log a critical error if configuration loading fails
-        logging.critical(f"Failed to load configuration: {e}")
-
-        # Exit the application with a non-zero status to indicate failure
-        exit(1)  # Ensure the application does not start without valid configuration
 
     # Step 3: Start the Flask application
     logging.info("Starting Flask application...")  # Log the application startup process

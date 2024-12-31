@@ -1,0 +1,209 @@
+2024-12-31 12:27:36,471 - INFO - Logging has been set up successfully.
+2024-12-31 12:27:36,471 - INFO - Starting the Flask application setup...
+2024-12-31 12:27:36,471 - INFO - Configuration file loaded successfully.
+2024-12-31 12:27:36,471 - INFO - Configuration loaded. Patient DB Path: /home/miladadmin/Y2_Genepanel_project_last_working_FULL_VERSION/Y2_Genepanel_project/PanelGeneMapper/patient_database.db, Panel Directory: /home/miladadmin/Y2_Genepanel_project_last_working_FULL_VERSION/Y2_Genepanel_project/PanelGeneMapper
+2024-12-31 12:27:36,534 - INFO - Serving index.html for the root route.
+2024-12-31 12:27:36,560 - INFO - Serving static file: style.css
+2024-12-31 12:27:36,567 - INFO - Searching for records for Patient ID: Patient_12345
+2024-12-31 12:27:36,567 - INFO - Fetching data for patient ID: Patient_12345
+2024-12-31 12:27:36,567 - INFO - Records fetched for patient ID Patient_12345: [('Patient_12345', 'R46', '2024-12-18', '2024-01-01')]
+2024-12-31 12:27:36,568 - INFO - Processing records for Patient ID: Patient_12345
+2024-12-31 12:27:36,573 - INFO - Processing patient ID: Patient_12345, Clinical ID: R46
+2024-12-31 12:27:36,573 - INFO - Locating PanelApp database for Panel Retrieved Date: 2024-01-01
+2024-12-31 12:27:36,573 - INFO - Searching for PanelApp database with prefix: panelapp_v20240101
+2024-12-31 12:27:36,573 - INFO - Found relevant database: panelapp_v20240101.db
+2024-12-31 12:27:36,573 - INFO - Fetching gene panel for R code R46 from database: /tmp/tmp9h42l25g/panelapp_v20240101.db
+2024-12-31 12:27:36,573 - INFO - Extracting data for clinical ID: R46 from /tmp/tmp9h42l25g/panelapp_v20240101.db
+2024-12-31 12:27:36,574 - INFO - Genes found for clinical ID R46: ['GeneA', 'GeneB']
+2024-12-31 12:27:36,574 - INFO - HGNC IDs found for clinical ID R46: ['HGNC:12345', 'HGNC:67890']
+2024-12-31 12:27:36,574 - INFO - Version created for clinical ID R46: 2024-01-01
+2024-12-31 12:27:36,584 - INFO - Searching for records for Patient ID: Patient_99999
+2024-12-31 12:27:36,584 - INFO - Fetching data for patient ID: Patient_99999
+2024-12-31 12:27:36,584 - INFO - Records fetched for patient ID Patient_99999: []
+2024-12-31 12:27:36,585 - INFO - No records found for Patient ID: Patient_99999
+2024-12-31 12:27:36,591 - WARNING - Patient ID is missing in the request.
+2024-12-31 12:27:36,597 - WARNING - Invalid Patient ID format: 12345
+2024-12-31 12:27:36,604 - INFO - Most recent PanelApp database: /tmp/tmpt6bj6zgp/panelapp_v20240101.db
+2024-12-31 12:27:36,604 - INFO - Most recent PanelApp database date: 2024-01-01
+2024-12-31 12:27:36,604 - INFO - Most recent PanelApp database: /tmp/tmpt6bj6zgp/panelapp_v20240101.db
+2024-12-31 12:27:36,604 - INFO - Extracting data for clinical ID: R46 from /tmp/tmpt6bj6zgp/panelapp_v20240101.db
+2024-12-31 12:27:36,604 - INFO - Genes found for clinical ID R46: ['GeneA', 'GeneB']
+2024-12-31 12:27:36,604 - INFO - HGNC IDs found for clinical ID R46: ['HGNC:12345', 'HGNC:67890']
+2024-12-31 12:27:36,604 - INFO - Version created for clinical ID R46: 2024-01-01
+2024-12-31 12:27:36,604 - INFO - Adding new patient record: Patient_54321, R code: R46, Panel Retrieved Date: 2024-01-01
+2024-12-31 12:27:36,605 - INFO - Successfully added patient record: Patient_54321
+2024-12-31 12:27:36,606 - INFO - New record created for Patient ID Patient_54321 with R Code R46
+2024-12-31 12:27:36,612 - WARNING - Invalid R Code: R999
+2024-12-31 12:27:36,624 - INFO - Most recent PanelApp database: /tmp/tmpo0xxs1ua/panelapp_v20240101.db
+2024-12-31 12:27:36,624 - INFO - Most recent PanelApp database date: 2024-01-01
+2024-12-31 12:27:36,624 - INFO - Most recent PanelApp database: /tmp/tmpo0xxs1ua/panelapp_v20240101.db
+2024-12-31 12:27:36,624 - INFO - Extracting data for clinical ID: R201 from /tmp/tmpo0xxs1ua/panelapp_v20240101.db
+2024-12-31 12:27:36,624 - INFO - Genes found for clinical ID R201: []
+2024-12-31 12:27:36,624 - INFO - HGNC IDs found for clinical ID R201: []
+2024-12-31 12:27:36,624 - INFO - Version created for clinical ID R201: None
+2024-12-31 12:27:36,624 - INFO - R Code R201 not found in the most recent PanelApp database. Searching older databases.
+2024-12-31 12:27:36,624 - INFO - Preparing to decompress file: /tmp/tmpo0xxs1ua/panelapp_v20220101.db.gz
+2024-12-31 12:27:36,625 - INFO - Decompressing file: /tmp/tmpo0xxs1ua/panelapp_v20220101.db.gz -> /tmp/tmpo0xxs1ua/panelapp_v20220101.db
+2024-12-31 12:27:36,625 - INFO - Extracting data for clinical ID: R201 from /tmp/tmpo0xxs1ua/panelapp_v20220101.db
+2024-12-31 12:27:36,625 - INFO - Genes found for clinical ID R201: ['GeneX']
+2024-12-31 12:27:36,625 - INFO - HGNC IDs found for clinical ID R201: ['HGNC:98765']
+2024-12-31 12:27:36,625 - INFO - Version created for clinical ID R201: 2022-01-01
+2024-12-31 12:27:36,625 - INFO - R Code R201 found in older PanelApp database: panelapp_v20220101.db.gz.
+2024-12-31 12:27:36,625 - INFO - Adding new patient record: Patient_67890, R code: R201, Panel Retrieved Date: 2022-01-01.db.gz
+2024-12-31 12:27:36,626 - INFO - Successfully added patient record: Patient_67890
+2024-12-31 12:27:36,626 - INFO - New record created for Patient ID Patient_67890 with R Code R201
+2024-12-31 12:27:36,636 - INFO - Validating R Code: R46
+2024-12-31 12:27:36,636 - INFO - Fetching records for R Code: R46
+2024-12-31 12:27:36,636 - INFO - Fetching records for R code: R46 from database: /tmp/tmpllp9h_58/patient_database.db
+2024-12-31 12:27:36,636 - INFO - Records fetched for R code R46: [('Patient_11111', 'R46', '2024-12-19', '2024-01-01')]
+2024-12-31 12:27:36,636 - INFO - Processing records for R Code: R46
+2024-12-31 12:27:36,640 - INFO - Processing patient ID: Patient_11111, Clinical ID: R46
+2024-12-31 12:27:36,641 - INFO - Locating PanelApp database for Panel Retrieved Date: 2024-01-01
+2024-12-31 12:27:36,641 - INFO - Searching for PanelApp database with prefix: panelapp_v20240101
+2024-12-31 12:27:36,641 - INFO - Found relevant database: panelapp_v20240101.db
+2024-12-31 12:27:36,641 - INFO - Fetching gene panel for R code R46 from database: /tmp/tmpllp9h_58/panelapp_v20240101.db
+2024-12-31 12:27:36,641 - INFO - Extracting data for clinical ID: R46 from /tmp/tmpllp9h_58/panelapp_v20240101.db
+2024-12-31 12:27:36,641 - INFO - Genes found for clinical ID R46: ['GeneA', 'GeneB']
+2024-12-31 12:27:36,641 - INFO - HGNC IDs found for clinical ID R46: ['HGNC:12345', 'HGNC:67890']
+2024-12-31 12:27:36,641 - INFO - Version created for clinical ID R46: 2024-01-01
+2024-12-31 12:27:36,644 - INFO - Processed 1 records for R Code: R46
+2024-12-31 12:27:36,655 - INFO - Validating R Code: R999
+2024-12-31 12:27:36,655 - WARNING - Invalid R Code: R999
+2024-12-31 12:27:36,663 - INFO - Validating R Code: R46
+2024-12-31 12:27:36,663 - INFO - Fetching records for R Code: R46
+2024-12-31 12:27:36,663 - INFO - Fetching records for R code: R46 from database: /tmp/tmpevg99jx7/patient_database.db
+2024-12-31 12:27:36,663 - INFO - Records fetched for R code R46: [('Patient_11111', 'R46', '2024-12-25', '2024-01-01'), ('Patient_22222', 'R46', '2024-12-26', '2024-01-01')]
+2024-12-31 12:27:36,663 - INFO - Processing records for R Code: R46
+2024-12-31 12:27:36,667 - INFO - Processing patient ID: Patient_11111, Clinical ID: R46
+2024-12-31 12:27:36,667 - INFO - Processing patient ID: Patient_22222, Clinical ID: R46
+2024-12-31 12:27:36,667 - INFO - Locating PanelApp database for Panel Retrieved Date: 2024-01-01
+2024-12-31 12:27:36,667 - INFO - Locating PanelApp database for Panel Retrieved Date: 2024-01-01
+2024-12-31 12:27:36,667 - INFO - Searching for PanelApp database with prefix: panelapp_v20240101
+2024-12-31 12:27:36,667 - INFO - Searching for PanelApp database with prefix: panelapp_v20240101
+2024-12-31 12:27:36,667 - INFO - Found relevant database: panelapp_v20240101.db
+2024-12-31 12:27:36,667 - INFO - Found relevant database: panelapp_v20240101.db
+2024-12-31 12:27:36,667 - INFO - Fetching gene panel for R code R46 from database: /tmp/tmpevg99jx7/panelapp_v20240101.db
+2024-12-31 12:27:36,667 - INFO - Fetching gene panel for R code R46 from database: /tmp/tmpevg99jx7/panelapp_v20240101.db
+2024-12-31 12:27:36,667 - INFO - Extracting data for clinical ID: R46 from /tmp/tmpevg99jx7/panelapp_v20240101.db
+2024-12-31 12:27:36,667 - INFO - Extracting data for clinical ID: R46 from /tmp/tmpevg99jx7/panelapp_v20240101.db
+2024-12-31 12:27:36,668 - INFO - Genes found for clinical ID R46: ['GeneA', 'GeneB']
+2024-12-31 12:27:36,668 - INFO - Genes found for clinical ID R46: ['GeneA', 'GeneB']
+2024-12-31 12:27:36,668 - INFO - HGNC IDs found for clinical ID R46: ['HGNC:12345', 'HGNC:67890']
+2024-12-31 12:27:36,668 - INFO - HGNC IDs found for clinical ID R46: ['HGNC:12345', 'HGNC:67890']
+2024-12-31 12:27:36,668 - INFO - Version created for clinical ID R46: 2024-01-01
+2024-12-31 12:27:36,668 - INFO - Version created for clinical ID R46: 2024-01-01
+2024-12-31 12:27:36,670 - INFO - Processed 2 records for R Code: R46
+2024-12-31 12:27:36,683 - INFO - Validating R Code: R133
+2024-12-31 12:27:36,684 - INFO - Fetching records for R Code: R133
+2024-12-31 12:27:36,684 - INFO - Fetching records for R code: R133 from database: /tmp/tmpcko21sqz/patient_database.db
+2024-12-31 12:27:36,684 - INFO - Records fetched for R code R133: [('Patient_11111', 'R133', '2024-12-25', '2022-01-01'), ('Patient_22222', 'R133', '2024-12-26', '2022-01-01'), ('Patient_33333', 'R133', '2024-12-27', '2022-01-01')]
+2024-12-31 12:27:36,684 - INFO - Processing records for R Code: R133
+2024-12-31 12:27:36,688 - INFO - Processing patient ID: Patient_22222, Clinical ID: R133
+2024-12-31 12:27:36,688 - INFO - Processing patient ID: Patient_11111, Clinical ID: R133
+2024-12-31 12:27:36,688 - INFO - Processing patient ID: Patient_33333, Clinical ID: R133
+2024-12-31 12:27:36,688 - INFO - Locating PanelApp database for Panel Retrieved Date: 2022-01-01
+2024-12-31 12:27:36,688 - INFO - Locating PanelApp database for Panel Retrieved Date: 2022-01-01
+2024-12-31 12:27:36,688 - INFO - Locating PanelApp database for Panel Retrieved Date: 2022-01-01
+2024-12-31 12:27:36,688 - INFO - Searching for PanelApp database with prefix: panelapp_v20220101
+2024-12-31 12:27:36,688 - INFO - Searching for PanelApp database with prefix: panelapp_v20220101
+2024-12-31 12:27:36,688 - INFO - Searching for PanelApp database with prefix: panelapp_v20220101
+2024-12-31 12:27:36,688 - INFO - Found relevant database: panelapp_v20220101.db.gz
+2024-12-31 12:27:36,688 - INFO - Found relevant database: panelapp_v20220101.db.gz
+2024-12-31 12:27:36,688 - INFO - Found relevant database: panelapp_v20220101.db.gz
+2024-12-31 12:27:36,688 - INFO - Fetching gene panel for R code R133 from database: /tmp/tmpcko21sqz/panelapp_v20220101.db.gz
+2024-12-31 12:27:36,688 - INFO - Fetching gene panel for R code R133 from database: /tmp/tmpcko21sqz/panelapp_v20220101.db.gz
+2024-12-31 12:27:36,688 - INFO - Fetching gene panel for R code R133 from database: /tmp/tmpcko21sqz/panelapp_v20220101.db.gz
+2024-12-31 12:27:36,688 - INFO - Preparing to decompress file: /tmp/tmpcko21sqz/panelapp_v20220101.db.gz
+2024-12-31 12:27:36,688 - INFO - Preparing to decompress file: /tmp/tmpcko21sqz/panelapp_v20220101.db.gz
+2024-12-31 12:27:36,688 - INFO - Preparing to decompress file: /tmp/tmpcko21sqz/panelapp_v20220101.db.gz
+2024-12-31 12:27:36,689 - INFO - Decompressing file: /tmp/tmpcko21sqz/panelapp_v20220101.db.gz -> /tmp/tmpcko21sqz/panelapp_v20220101.db
+2024-12-31 12:27:36,689 - INFO - Extracting data for clinical ID: R133 from /tmp/tmpcko21sqz/panelapp_v20220101.db
+2024-12-31 12:27:36,689 - INFO - Genes found for clinical ID R133: ['GeneX', 'GeneY', 'GeneZ']
+2024-12-31 12:27:36,690 - INFO - HGNC IDs found for clinical ID R133: ['HGNC:98765', 'HGNC:56789', 'HGNC:13579']
+2024-12-31 12:27:36,690 - INFO - Version created for clinical ID R133: 2022-01-01
+2024-12-31 12:27:36,739 - INFO - Decompressed file already exists and is valid: /tmp/tmpcko21sqz/panelapp_v20220101.db
+2024-12-31 12:27:36,739 - INFO - Extracting data for clinical ID: R133 from /tmp/tmpcko21sqz/panelapp_v20220101.db
+2024-12-31 12:27:36,739 - INFO - Decompressed file already exists and is valid: /tmp/tmpcko21sqz/panelapp_v20220101.db
+2024-12-31 12:27:36,739 - INFO - Extracting data for clinical ID: R133 from /tmp/tmpcko21sqz/panelapp_v20220101.db
+2024-12-31 12:27:36,740 - INFO - Genes found for clinical ID R133: ['GeneX', 'GeneY', 'GeneZ']
+2024-12-31 12:27:36,740 - INFO - Genes found for clinical ID R133: ['GeneX', 'GeneY', 'GeneZ']
+2024-12-31 12:27:36,740 - INFO - HGNC IDs found for clinical ID R133: ['HGNC:98765', 'HGNC:56789', 'HGNC:13579']
+2024-12-31 12:27:36,740 - INFO - HGNC IDs found for clinical ID R133: ['HGNC:98765', 'HGNC:56789', 'HGNC:13579']
+2024-12-31 12:27:36,740 - INFO - Version created for clinical ID R133: 2022-01-01
+2024-12-31 12:27:36,740 - INFO - Version created for clinical ID R133: 2022-01-01
+2024-12-31 12:27:36,742 - INFO - Processed 3 records for R Code: R133
+2024-12-31 12:27:36,756 - INFO - Most recent PanelApp database: /tmp/tmpm44rvluf/panelapp_v20240101.db
+2024-12-31 12:27:36,756 - INFO - Most recent PanelApp database date: 2024-01-01
+2024-12-31 12:27:36,756 - INFO - Most recent PanelApp database: /tmp/tmpm44rvluf/panelapp_v20240101.db
+2024-12-31 12:27:36,756 - INFO - Extracting data for clinical ID: R133 from /tmp/tmpm44rvluf/panelapp_v20240101.db
+2024-12-31 12:27:36,756 - INFO - Genes found for clinical ID R133: []
+2024-12-31 12:27:36,756 - INFO - HGNC IDs found for clinical ID R133: []
+2024-12-31 12:27:36,756 - INFO - Version created for clinical ID R133: None
+2024-12-31 12:27:36,756 - INFO - R code R133 not found in the most recent PanelApp database. Searching older databases.
+2024-12-31 12:27:36,756 - INFO - Preparing to decompress file: /tmp/tmpm44rvluf/panelapp_v20210101.db.gz
+2024-12-31 12:27:36,756 - INFO - Decompressing file: /tmp/tmpm44rvluf/panelapp_v20210101.db.gz -> /tmp/tmpm44rvluf/panelapp_v20210101.db
+2024-12-31 12:27:36,757 - INFO - Extracting data for clinical ID: R133 from /tmp/tmpm44rvluf/panelapp_v20210101.db
+2024-12-31 12:27:36,757 - INFO - Genes found for clinical ID R133: []
+2024-12-31 12:27:36,757 - INFO - HGNC IDs found for clinical ID R133: []
+2024-12-31 12:27:36,757 - INFO - Version created for clinical ID R133: None
+2024-12-31 12:27:36,757 - WARNING - Gene panel for R code R133 is not available in any PanelApp database.
+2024-12-31 12:27:36,758 - INFO - Received request at /compare-live-panelapp
+2024-12-31 12:27:36,758 - INFO - Comparing HGNC IDs for clinical_id: R46. Existing HGNC IDs: ['HGNC:12345', 'HGNC:67890']
+2024-12-31 12:27:36,758 - INFO - Retrieved live HGNC IDs for R46: ['HGNC:12345', 'HGNC:67890', 'HGNC:11111']
+2024-12-31 12:27:36,758 - INFO - Differences found between existing and live HGNC IDs.
+2024-12-31 12:27:36,759 - INFO - Received request at /compare-live-panelapp
+2024-12-31 12:27:36,759 - INFO - Comparing HGNC IDs for clinical_id: R46. Existing HGNC IDs: ['HGNC:12345', 'HGNC:67890']
+2024-12-31 12:27:36,759 - INFO - Retrieved live HGNC IDs for R46: ['HGNC:12345', 'HGNC:67890']
+2024-12-31 12:27:36,759 - INFO - No differences found between existing and live HGNC IDs.
+2024-12-31 12:27:36,760 - INFO - Received request at /compare-live-panelapp
+2024-12-31 12:27:36,760 - WARNING - clinical_id is missing in the request data
+2024-12-31 12:27:36,761 - INFO - Received request at /compare-live-panelapp
+2024-12-31 12:27:36,761 - WARNING - existing_hgnc_ids must be a list. Received: <class 'str'>
+2024-12-31 12:27:36,762 - INFO - Received request at /compare-live-panelapp
+2024-12-31 12:27:36,762 - INFO - Comparing HGNC IDs for clinical_id: R46. Existing HGNC IDs: ['HGNC:12345', 'HGNC:67890']
+2024-12-31 12:27:36,762 - ERROR - Error retrieving live HGNC IDs for R46: API failure
+2024-12-31 12:27:36,764 - INFO - Configuration file loaded successfully.
+2024-12-31 12:27:36,765 - ERROR - Configuration file not found: /non_existent_config.json
+2024-12-31 12:27:36,766 - ERROR - Error parsing configuration file: /tmp/pytest-of-miladadmin/pytest-94/test_load_config_invalid_json0/invalid.json
+2024-12-31 12:27:36,769 - INFO - Fetching data for patient ID: Patient_123
+2024-12-31 12:27:36,769 - INFO - Records fetched for patient ID Patient_123: []
+2024-12-31 12:27:36,770 - INFO - Fetching data for patient ID: Patient_123
+2024-12-31 12:27:36,770 - ERROR - Error fetching data for patient ID Patient_123: no such table: patient_data
+2024-12-31 12:27:36,774 - INFO - Fetching data for patient ID: Patient_123
+2024-12-31 12:27:36,774 - INFO - Records fetched for patient ID Patient_123: []
+2024-12-31 12:27:36,778 - INFO - Fetching data for patient ID: Patient_123
+2024-12-31 12:27:36,778 - INFO - Records fetched for patient ID Patient_123: [('Patient_123', 'R46', '2024-12-25', '2024-12-24')]
+2024-12-31 12:27:36,782 - INFO - Fetching data for patient ID: Patient_123
+2024-12-31 12:27:36,782 - INFO - Records fetched for patient ID Patient_123: [('Patient_123', 'R46', '2024-12-25', '2024-12-24'), ('Patient_123', 'R47', '2024-12-26', '2024-12-25')]
+2024-12-31 12:27:36,786 - INFO - Fetching data for patient ID: Patient_123'; DROP TABLE patient_data; --
+2024-12-31 12:27:36,786 - INFO - Records fetched for patient ID Patient_123'; DROP TABLE patient_data; --: []
+2024-12-31 12:27:36,789 - INFO - Adding new patient record: Patient_001, R code: R46, Panel Retrieved Date: 2024-12-24
+2024-12-31 12:27:36,790 - INFO - Successfully added patient record: Patient_001
+2024-12-31 12:27:36,792 - INFO - Extracting data for clinical ID: R999 from /fake/decompressed_path.db
+2024-12-31 12:27:36,793 - INFO - Genes found for clinical ID R999: ['GeneA', 'GeneB']
+2024-12-31 12:27:36,793 - INFO - HGNC IDs found for clinical ID R999: ['HGNC:12345', 'HGNC:67890']
+2024-12-31 12:27:36,793 - INFO - Version created for clinical ID R999: 2024-11-19
+2024-12-31 12:27:36,793 - INFO - Deleted decompressed file: /fake/decompressed_path.db
+2024-12-31 12:27:36,794 - INFO - Extracting data for clinical ID: R000 from /fake/decompressed_path.db
+2024-12-31 12:27:36,794 - INFO - Genes found for clinical ID R000: []
+2024-12-31 12:27:36,794 - INFO - HGNC IDs found for clinical ID R000: []
+2024-12-31 12:27:36,794 - INFO - Version created for clinical ID R000: None
+2024-12-31 12:27:36,795 - INFO - Deleted decompressed file: /fake/decompressed_path.db
+2024-12-31 12:27:36,796 - INFO - Extracting data for clinical ID: R999 from /fake/decompressed_path.db
+2024-12-31 12:27:36,796 - INFO - Deleted decompressed file: /fake/decompressed_path.db
+2024-12-31 12:27:36,798 - INFO - Preparing to decompress file: /tmp/pytest-of-miladadmin/pytest-94/test_decompress_if_needed_gz0/test_file.db.gz
+2024-12-31 12:27:36,799 - INFO - Decompressing file: /tmp/pytest-of-miladadmin/pytest-94/test_decompress_if_needed_gz0/test_file.db.gz -> /tmp/pytest-of-miladadmin/pytest-94/test_decompress_if_needed_gz0/test_file.db
+2024-12-31 12:27:36,800 - INFO - Searching for PanelApp database with prefix: panelapp_v20241119
+2024-12-31 12:27:36,800 - INFO - Found relevant database: panelapp_v20241119.db
+2024-12-31 12:27:36,800 - INFO - Searching for PanelApp database with prefix: panelapp_v20241119
+2024-12-31 12:27:36,800 - ERROR - No PanelApp database found for date 2024-11-19.
+2024-12-31 12:27:36,801 - ERROR - No uncompressed PanelApp database found.
+2024-12-31 12:27:36,802 - ERROR - No uncompressed PanelApp database found.
+2024-12-31 12:27:36,803 - INFO - Most recent PanelApp database: /tmp/pytest-of-miladadmin/pytest-94/test_find_most_recent_panel_db2/panelapp_v20231201.db
+2024-12-31 12:27:36,815 - INFO - Most recent PanelApp database: /tmp/pytest-of-miladadmin/pytest-94/test_find_most_recent_panel_db3/panelapp_v20240101.db
+2024-12-31 12:27:36,816 - ERROR - No uncompressed PanelApp database found.
+2024-12-31 12:27:36,817 - INFO - Most recent PanelApp database: /tmp/pytest-of-miladadmin/pytest-94/test_find_most_recent_panel_db5/panelapp_v20241130.db
+2024-12-31 12:27:36,828 - INFO - Most recent PanelApp database: /tmp/pytest-of-miladadmin/pytest-94/test_find_most_recent_panel_db6/subdir2/panelapp_v20250101.db
+2024-12-31 12:27:36,829 - INFO - Most recent PanelApp database: /tmp/pytest-of-miladadmin/pytest-94/test_find_most_recent_panel_db7/panelapp_v20230101.db
+2024-12-31 12:27:36,830 - INFO - Most recent PanelApp database: /tmp/pytest-of-miladadmin/pytest-94/test_find_most_recent_panel_da0/panelapp_v20241225.db
+2024-12-31 12:27:36,830 - INFO - Most recent PanelApp database date: 2024-12-25

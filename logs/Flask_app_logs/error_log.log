@@ -1,0 +1,8 @@
+2024-12-31 12:27:36,762 - ERROR - Error retrieving live HGNC IDs for R46: API failure
+2024-12-31 12:27:36,765 - ERROR - Configuration file not found: /non_existent_config.json
+2024-12-31 12:27:36,766 - ERROR - Error parsing configuration file: /tmp/pytest-of-miladadmin/pytest-94/test_load_config_invalid_json0/invalid.json
+2024-12-31 12:27:36,770 - ERROR - Error fetching data for patient ID Patient_123: no such table: patient_data
+2024-12-31 12:27:36,800 - ERROR - No PanelApp database found for date 2024-11-19.
+2024-12-31 12:27:36,801 - ERROR - No uncompressed PanelApp database found.
+2024-12-31 12:27:36,802 - ERROR - No uncompressed PanelApp database found.
+2024-12-31 12:27:36,816 - ERROR - No uncompressed PanelApp database found.

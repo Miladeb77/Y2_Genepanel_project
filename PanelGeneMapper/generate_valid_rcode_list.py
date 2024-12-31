@@ -490,4 +490,3 @@ if __name__ == "__main__":
         # - Use `time.sleep` to introduce a delay between successive executions.
         # - This prevents excessive resource usage and allows periodic updates.
         time.sleep(120)  # Wait for 2 minutes before the next iteration
-
