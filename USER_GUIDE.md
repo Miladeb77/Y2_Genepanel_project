@@ -81,7 +81,7 @@ Adds a new patient to the database with specified details.
 
 **Example:**  
 ```bash
-python main.py add_patient --patient_id 1234 --clinical_id 5678 --test_date 2024-12-30
+python panelgenemapper.py add_patient --patient_id 1234 --clinical_id 5678 --test_date 2024-12-30
 ```
 
 ---
@@ -106,7 +106,7 @@ Retrieves a gene list for a specific patient or clinical ID.
 
 **Example:**  
 ```bash
-python main.py retrieve_genes --patient_db ./databases/patient_database.db --panelapp_db ./databases/panelapp_v20241230.db --output_file ./output/gene_list.csv --r_code 5678
+python panelgenemapper.py retrieve_genes --patient_db ./databases/patient_database.db --panelapp_db ./databases/panelapp_v20241230.db --output_file ./output/gene_list.csv --r_code 5678
 ```
 
 ---
