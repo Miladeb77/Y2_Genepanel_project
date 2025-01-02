@@ -15,8 +15,9 @@ This guide provides instructions on how to interact with the available commands 
 ### 1. **Build PanelApp Database**
 
 **Command:**
-**`python -m modules.build_panelApp_database`**
-
+```bash
+python -m modules.build_panelApp_database
+```
 **Description:**  
 Fetches the latest gene panels from PanelApp, processes the data, and saves it into an SQLite database (e.g., panelapp_v*.db).
 
@@ -25,7 +26,9 @@ Fetches the latest gene panels from PanelApp, processes the data, and saves it i
 ### 2. **Integrate Patient Data**
 
 **Command:**  
-**`python -m modules.build_patient_database --num_patients <number> --patient_data <path_to_patient_data> --default_test_date <test_date>`**
+```bash 
+python -m modules.build_patient_database --num_patients <number> --patient_data <path_to_patient_data> --default_test_date <test_date>
+```
 
 **Description:**  
 Creates a patient database and integrates it with the PanelApp database.
@@ -35,12 +38,16 @@ Creates a patient database and integrates it with the PanelApp database.
 - **--patient_data:** (Optional) Path to a JSON file containing patient data.
 - **--default_test_date:** (Optional) Default test date (e.g., YYYY-MM-DD).
 **Example:**  
-**`python -m modules.build_patient_database --num_patients 1000 --default_test_date 2024-12-30`**
+```bash 
+python -m modules.build_patient_database --num_patients 1000 --default_test_date 2024-12-30
+```
 
 ### 3. **List All Patients in the Database**
 
 **Command:**  
-**`python panelgenemapper.py list_patients <path_to_patient_db> --save`**
+```bash
+python panelgenemapper.py list_patients <path_to_patient_db> --save
+```
 
 **Description:**  
 Lists all patients in the database. Optionally, you can save the list to a CSV file.
@@ -50,14 +57,18 @@ Lists all patients in the database. Optionally, you can save the list to a CSV f
 - **--save:** (Optional) If provided, saves the list of patients to a CSV file.
 
 **Example:**  
-**`python panelgenemapper.py list_patients --patient_db ./databases/patient_database.db --save`**
+```bash 
+python panelgenemapper.py list_patients --patient_db ./databases/patient_database.db --save
+```
 
 ---
 
 ### 4. **Add a New Patient to the Database**
 
 **Command:**  
-**`python panelgenemapper.py add_patient --patient_id <patient_id> --clinical_id <clinical_id> --test_date <test_date>`**
+```bash
+python panelgenemapper.py add_patient --patient_id <patient_id> --clinical_id <clinical_id> --test_date <test_date>
+```
 
 **Description:**  
 Adds a new patient to the database with specified details.
@@ -69,14 +80,18 @@ Adds a new patient to the database with specified details.
 - **--test_date:** (Required) The test date in the format YYYY-MM-DD.
 
 **Example:**  
-**`python main.py add_patient --patient_id 1234 --clinical_id 5678 --test_date 2024-12-30`**
+```bash
+python main.py add_patient --patient_id 1234 --clinical_id 5678 --test_date 2024-12-30
+```
 
 ---
 
 ### 5. **Retrieve Gene List for Specific Patients**
 
 **Command:**  
-**`python panelgenemapper.py retrieve_genes --r_code <r_code> --patient_id <patient_id> --output_file <output_file>`**
+```bash
+python panelgenemapper.py retrieve_genes --r_code <r_code> --patient_id <patient_id> --output_file <output_file>
+```
 
 **Description:**  
 Retrieves a gene list for a specific patient or clinical ID.
@@ -90,27 +105,31 @@ Retrieves a gene list for a specific patient or clinical ID.
 - **--archive_folder:** (Optional) The name of the folder containing archived databases.
 
 **Example:**  
-**`python main.py retrieve_genes --patient_db ./databases/patient_database.db --panelapp_db ./databases/panelapp_v20241230.db --output_file ./output/gene_list.csv --r_code 5678`**
+```bash
+python main.py retrieve_genes --patient_db ./databases/patient_database.db --panelapp_db ./databases/panelapp_v20241230.db --output_file ./output/gene_list.csv --r_code 5678
+```
 
 ---
 
 ### 6. **Compare Local Database with the Latest API Data**
 
 **Command:**  
-**`python panelgenemapper.py compare_with_api`**
+```bash
+python panelgenemapper.py compare_with_api
+```
 
 **Description:**  
 Compares the local PanelApp database with the latest version from the PanelApp API to identify discrepancies or updates.
 
-**Example:**  
-**`python main.py compare_with_api`**
 
 ---
 
 ### 7. **Generate a BED File from Gene List**
 
 **Command:**  
-**`python panelgenemapper.py generate_bed --csv_file <path_to_csv> --r_code <r_code> --patient_id <patient_id> --output_file <output_fi`**
+```bash
+python panelgenemapper.py generate_bed --csv_file <path_to_csv> --r_code <r_code> --patient_id <patient_id> --output_file <output_file>
+```
 
 **Description:**  
 Generates a BED file from the gene list provided or from the patient database.
@@ -122,7 +141,9 @@ Generates a BED file from the gene list provided or from the patient database.
 - **--output_file:** (Optional) Path to save the resulting BED file. Defaults to `../output/gene_exons.bed`.
 
 **Example:**  
-**`python main.py generate_bed --csv_file ./output/gene_list.csv --output_file ./output/gene_exons.bed`**
+```bash
+panelgenemapper.py generate_bed --csv_file ./output/gene_list.csv --output_file ./output/gene_exons.bed
+```
 
 ---
 
@@ -140,6 +161,9 @@ The application generates logs for each operation, saved in the `logs` directory
 
 - **panel_gene_mapper_info.log:** Contains informational logs.
 - **panel_gene_mapper_error.log:** Contains error logs, useful for troubleshooting issues.
+- INFO-level logs and above are displayed in the console.
+
+The logging configuration can be customized within the code, and the log files and logging levels can be adjusted by modifying the setup_logging() function.
 
 For detailed information on any issues, refer to the `panel_gene_mapper_error.log`.
 
