@@ -21,7 +21,7 @@ RUN apt update && apt -y install \
 RUN pip install --upgrade pip
 
 # Install dependencies from requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt 
 
 # Copy configuration files to the container's home directory
 COPY configuration/build_panelApp_database_config.json /root/.genepanel_config
@@ -32,9 +32,9 @@ RUN mkdir -p /app/databases /app/archive_databases /app/output
 # Expose a port (if required for future networking needs)
 EXPOSE 8080
 
-# Set the entry point to the main script inside the PanelGeneMapper directory
-WORKDIR /app/PanelGeneMapper
-ENTRYPOINT ["python", "panelgenemapper.py"]
+# Set the default working directory for the container
+WORKDIR /app
 
-# Default command to display help if no arguments are provided
-CMD ["--help"]
+# Remove the fixed ENTRYPOINT
+# Let the command to execute be specified explicitly when running the container
+CMD ["tail", "-f", "/dev/null"]
