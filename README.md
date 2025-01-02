@@ -16,6 +16,7 @@
 1. Clone the repository or download the source code:
    ```bash
    git clone https://github.com/Miladeb77/Y2_Genepanel_project.git
+   cd Y2_Genepanel_project
    ```
 
 2. Install the dependencies using the provided `environment.yml` file:
@@ -24,7 +25,7 @@
    ```
 3. Navigate to the PanelGeneMapper directory
    ```bash
-   cd Y2_Genepanel_project/PanelGeneMapper
+   cd PanelGeneMapper
    ```
 
 ---
