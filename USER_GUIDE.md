@@ -12,20 +12,35 @@ This guide provides instructions on how to interact with the available commands 
 
 ---
 
-### 1. **Update Local PanelApp Database**
+### 1. **Build PanelApp Database**
 
 **Command:**
-**`python main.py update`**
+**`python -m modules.build_panelApp_database`**
 
 **Description:**  
-Updates the local PanelApp database with the latest data from the PanelApp API. This ensures that your local copy of the database is synchronized with the most recent available information.
+Fetches the latest gene panels from PanelApp, processes the data, and saves it into an SQLite database (e.g., panelapp_v*.db).
 
 ---
 
-### 2. **List All Patients in the Database**
+### 2. **Integrate Patient Data**
 
 **Command:**  
-**`python main.py list_patients --patient_db <path_to_patient_db> --save`**
+**`python -m modules.build_patient_database --num_patients <number> --patient_data <path_to_patient_data> --default_test_date <test_date>`**
+
+**Description:**  
+Creates a patient database and integrates it with the PanelApp database.
+
+**Options:**  
+- **--num_patients:** (Optional) Number of random patients to generate (default: 500). 
+- **--patient_data:** (Optional) Path to a JSON file containing patient data.
+- **--default_test_date:** (Optional) Default test date (e.g., YYYY-MM-DD).
+**Example:**  
+**`python -m modules.build_patient_database --num_patients 1000 --default_test_date 2024-12-30`**
+
+### 3. **List All Patients in the Database**
+
+**Command:**  
+**`python panelgenemapper.py list_patients <path_to_patient_db> --save`**
 
 **Description:**  
 Lists all patients in the database. Optionally, you can save the list to a CSV file.
@@ -35,14 +50,14 @@ Lists all patients in the database. Optionally, you can save the list to a CSV f
 - **--save:** (Optional) If provided, saves the list of patients to a CSV file.
 
 **Example:**  
-**`python main.py list_patients --patient_db ./databases/patient_database.db --save`**
+**`python panelgenemapper.py list_patients --patient_db ./databases/patient_database.db --save`**
 
 ---
 
-### 3. **Add a New Patient to the Database**
+### 4. **Add a New Patient to the Database**
 
 **Command:**  
-**`python main.py add_patient --patient_db <path_to_patient_db> --patient_id <patient_id> --clinical_id <clinical_id> --test_date <test_date>`**
+**`python panelgenemapper.py add_patient --patient_id <patient_id> --clinical_id <clinical_id> --test_date <test_date>`**
 
 **Description:**  
 Adds a new patient to the database with specified details.
@@ -58,10 +73,10 @@ Adds a new patient to the database with specified details.
 
 ---
 
-### 4. **Retrieve Gene List for Specific Patients**
+### 5. **Retrieve Gene List for Specific Patients**
 
 **Command:**  
-**`python main.py retrieve_genes --patient_db <path_to_patient_db> --panelapp_db <path_to_panelapp_db> --output_file <output_file> --r_code <r_code> --patient_id <patient_id> --archive_folder <archive_folder>`**
+**`python panelgenemapper.py retrieve_genes --r_code <r_code> --patient_id <patient_id> --output_file <output_file>`**
 
 **Description:**  
 Retrieves a gene list for a specific patient or clinical ID.
@@ -79,10 +94,10 @@ Retrieves a gene list for a specific patient or clinical ID.
 
 ---
 
-### 5. **Compare Local Database with the Latest API Data**
+### 6. **Compare Local Database with the Latest API Data**
 
 **Command:**  
-**`python main.py compare_with_api`**
+**`python panelgenemapper.py compare_with_api`**
 
 **Description:**  
 Compares the local PanelApp database with the latest version from the PanelApp API to identify discrepancies or updates.
@@ -92,10 +107,10 @@ Compares the local PanelApp database with the latest version from the PanelApp A
 
 ---
 
-### 6. **Generate a BED File from Gene List**
+### 7. **Generate a BED File from Gene List**
 
 **Command:**  
-**`python main.py generate_bed --csv_file <path_to_csv> --r_code <r_code> --patient_id <patient_id> --output_file <output_file>`**
+**`python panelgenemapper.py generate_bed --csv_file <path_to_csv> --r_code <r_code> --patient_id <patient_id> --output_file <output_fi`**
 
 **Description:**  
 Generates a BED file from the gene list provided or from the patient database.
