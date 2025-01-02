@@ -1,7 +1,7 @@
 # Declare the base image with the correct Python version
 FROM python:3.9
 
-# Create the working directory inside the container
+# Set the working directory inside the container
 WORKDIR /app
 
 # Copy the entire project directory into the container's /app directory
@@ -23,23 +23,18 @@ RUN pip install --upgrade pip
 # Install dependencies from requirements.txt
 RUN pip install -r requirements.txt
 
-# If Conda dependencies are specified, handle environment setup
-RUN if [ -f "environment.yml" ]; then \
-    pip install conda && \
-    conda env create -f environment.yml || conda env update -f environment.yml; \
-    fi
-
 # Copy configuration files to the container's home directory
 COPY configuration/build_panelApp_database_config.json /root/.genepanel_config
 
 # Ensure database folders exist and create them
 RUN mkdir -p /app/databases /app/archive_databases /app/output
 
-# Expose relevant ports if needed (future use)
+# Expose a port (if required for future networking needs)
 EXPOSE 8080
 
-# Set entrypoint for running the main script
+# Set the entry point to the main script inside the PanelGeneMapper directory
+WORKDIR /app/PanelGeneMapper
 ENTRYPOINT ["python", "panelgenemapper.py"]
 
-# Set the default command (replace with your project's common entry point if applicable)
+# Default command to display help if no arguments are provided
 CMD ["--help"]

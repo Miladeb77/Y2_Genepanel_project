@@ -1,89 +1,84 @@
 pipeline {
-    agent {
-        docker {
-            image "docker:24.0.6-git" // Docker image for Jenkins agent
-        }
-    }
+    agent any
     environment {
-        CONTAINER_SUFFIX = "${BUILD_NUMBER}" // Use the build number as a unique container suffix
-        DOCKER_NETWORK = "genepanel_network-$CONTAINER_SUFFIX" // Unique Docker network for this build
-        DATA_VOLUME = "genepanel_shared_space" // Shared data volume
+        IMAGE_NAME = "genepanel-app" // Name for the Docker image
+        CONTAINER_NAME = "genepanel-container" // Name for the Docker container
+        TEST_RESULTS_DIR = "output/test-results" // Directory for test results
     }
     stages {
-        stage("Prepare Environment") {
-            steps {
-                script {
-                    // Clean up dangling Docker components and create Docker network
-                    sh 'docker system prune --all --volumes --force || true'
-                    sh 'docker network create $DOCKER_NETWORK'
-                }
-            }
-        }
         stage("Checkout Code") {
             steps {
-                checkout scm // Checkout the source code
+                echo "Checking out the source code from GitHub..."
+                checkout scm
             }
         }
-        stage("Build and Run Application Container") {
+        stage("Build Docker Image") {
             steps {
                 script {
-                    def dockerfile = './Dockerfile' // Path to the Dockerfile
-                    def appContainer = docker.build("genepanel_app-${CONTAINER_SUFFIX}", "--no-cache -f ${dockerfile} .")
-                    // Run the main application container
-                    appContainer.run("-d --name genepanel_app --network $DOCKER_NETWORK -v $DATA_VOLUME:/app/output")
+                    echo "Building the Docker image..."
+                    sh """
+                        docker build -t $IMAGE_NAME .
+                    """
                 }
             }
         }
-        stage("Run Pytest") {
+        stage("Run Unit Tests in Docker Container") {
             steps {
                 script {
-                    def testsSuccessful = false
-
-                    // Retry logic for database connections and running tests
-                    for (int attempt = 1; attempt <= 5; attempt++) {
-                        echo "Attempt $attempt to connect and run tests..."
-                        def exitCode = sh(script: '''
-                            docker exec genepanel_app pytest --junitxml=/app/output/test-results.xml
-                        ''', returnStatus: true)
-
-                        if (exitCode == 0) {
-                            testsSuccessful = true
-                            echo "Tests executed successfully!"
-                            break
-                        }
-
-                        echo "Connection failed or tests unsuccessful. Retrying in 30 seconds..."
-                        sleep 30
-                    }
-
-                    if (!testsSuccessful) {
-                        error("All attempts to run tests failed.")
-                    }
+                    echo "Running tests in the Docker container..."
+                    sh """
+                        docker run --rm --name $CONTAINER_NAME \
+                            -v \$(pwd)/$TEST_RESULTS_DIR:/app/output \
+                            $IMAGE_NAME pytest --junitxml=/app/output/test-results.xml
+                    """
                 }
             }
         }
         stage("Archive Test Results") {
             steps {
-                // Archive test results
-                junit '/app/output/test-results.xml'
+                echo "Archiving test results..."
+                junit "$TEST_RESULTS_DIR/test-results.xml"
+            }
+        }
+        stage("Lint and Static Code Analysis") {
+            steps {
+                script {
+                    echo "Running flake8 for linting..."
+                    sh """
+                        docker run --rm --name $CONTAINER_NAME \
+                            $IMAGE_NAME flake8 PanelGeneMapper/ > lint-results.txt || true
+                    """
+                }
+                archiveArtifacts artifacts: "lint-results.txt", allowEmptyArchive: true
+            }
+        }
+        stage("Generate Documentation") {
+            steps {
+                script {
+                    echo "Generating documentation with pdoc..."
+                    sh """
+                        docker run --rm --name $CONTAINER_NAME \
+                            $IMAGE_NAME pdoc --html --output-dir /app/docs PanelGeneMapper/
+                    """
+                }
+                archiveArtifacts artifacts: "/app/docs/**", allowEmptyArchive: true
             }
         }
     }
     post {
         always {
             script {
-                // Clean up Docker resources
-                sh 'docker stop genepanel_app || true'
-                sh 'docker rm genepanel_app || true'
-                sh 'docker network rm $DOCKER_NETWORK || true'
-                sh 'docker system prune --all --volumes --force || true'
+                echo "Cleaning up Docker resources..."
+                sh """
+                    docker system prune --all --volumes --force || true
+                """
             }
         }
         success {
-            echo "Pipeline completed successfully!"
+            echo "Pipeline executed successfully!"
         }
         failure {
-            echo "Pipeline failed. Check logs for more details."
+            echo "Pipeline failed. Check logs for details."
         }
     }
 }
