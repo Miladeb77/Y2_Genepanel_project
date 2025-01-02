@@ -218,13 +218,7 @@ def connect_and_join_databases(
         project_dir = os.path.abspath(os.path.join(script_dir, "..", ".."))
         output_dir = os.path.join(project_dir, "output")
         os.makedirs(output_dir, exist_ok=True)
-
-        if r_code:
-            output_path = os.path.join(output_dir, f"gene_list_r_code_{r_code}.csv")
-        elif patient_id:
-            output_path = os.path.join(output_dir, f"gene_list_patient_id_{patient_id}.csv")
-        else:
-            output_path = os.path.join(output_dir, "gene_list.csv")
+        output_path = os.path.join(output_dir, "gene_list.csv")
 
         # Save the resulting table to a CSV file
         result_df.to_csv(output_path, index=False)

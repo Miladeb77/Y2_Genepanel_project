@@ -35,14 +35,14 @@ def setup_logging(logs_dir="logs", info_log_file="info.log", error_log_file="err
             logger.handlers.pop()
 
         # INFO handler with optional rotation
-        info_handler = RotatingFileHandler(info_log_path, maxBytes=15 * 1024, backupCount=0)
+        info_handler = RotatingFileHandler(info_log_path, maxBytes=15 * 1024, backupCount=1)
         info_handler.setLevel(logging.INFO)
         info_handler.addFilter(lambda record: record.levelno <= logging.INFO)
         info_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         logger.addHandler(info_handler)
 
         # ERROR handler with optional rotation
-        error_handler = RotatingFileHandler(error_log_path, maxBytes=15 * 1024, backupCount=0)
+        error_handler = RotatingFileHandler(error_log_path, maxBytes=15 * 1024, backupCount=1)
         error_handler.setLevel(logging.ERROR)
         error_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
         logger.addHandler(error_handler)
