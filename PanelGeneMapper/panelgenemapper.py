@@ -24,12 +24,27 @@ def configure_logging():
         error_log_file="panel_gene_mapper_error.log"
     )
 
+class CustomArgumentParser(argparse.ArgumentParser):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("add_help", False)
+        super().__init__(*args, **kwargs)
+        self.add_argument(
+            '-h', '--help',
+            action='help',
+            default=argparse.SUPPRESS,
+            help="Use this to view commands"
+        )
+
+    def error(self, message):
+        logging.error(f"Argument parsing error: {message}")
+        self.print_help()
+        raise SystemExit(2)
 
 def parse_arguments():
     """
     Parse command-line arguments for the script using subparsers.
     """
-    parser = argparse.ArgumentParser(
+    parser = CustomArgumentParser(
         description="PanelGeneMapper: A Tool for Integrating PanelApp Data with Lab Systems and Generating BED Files."
     )
     subparsers = parser.add_subparsers(dest="command", required=True, help="Available commands.")
@@ -166,8 +181,11 @@ def main():
         else:
             logging.error("Invalid command. Use --help to see available commands.")
 
+    except SystemExit as e:
+        logging.error(f"SystemExit occurred: {e}")
+        raise
     except Exception as e:
-        logging.error(f"An error occurred while executing the command: {e}")
+        logging.error(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":

@@ -12,19 +12,19 @@ from retrieve_gene_local_db import get_archive_dir, get_databases_dir, connect_a
 
 # Set up logging
 # Define log directory two levels up
-log_dir = os.path.join("..", "logs")
-os.makedirs(log_dir, exist_ok=True)
-log_file = os.path.join(log_dir, "make_bed_file.log")
+# log_dir = os.path.join("..", "logs")
+# os.makedirs(log_dir, exist_ok=True)
+# log_file = os.path.join(log_dir, "make_bed_file.log")
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    filename=log_file,
-    encoding="utf-8",
-    filemode="a",
-    format="{asctime} - {levelname} - {message}",
-    style="{",
-    datefmt="%Y-%m-%d %H:%M",
-)
+# logging.basicConfig(
+#     level=logging.DEBUG,
+#     filename=log_file,
+#     encoding="utf-8",
+#     filemode="a",
+#     format="{asctime} - {levelname} - {message}",
+#     style="{",
+#     datefmt="%Y-%m-%d %H:%M",
+# )
 
 # SQLite database for caching
 output_dir = os.path.join("..", "output")
