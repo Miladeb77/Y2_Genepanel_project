@@ -46,6 +46,18 @@ classifiers = [
 "Source" = "https://github.com/Miladeb77/Y2_Genepanel_project"
 "Bug Reports" = "https://github.com/Miladeb77/Y2_Genepanel_project/logs"
 
+[tool.setuptools.packages.find]
+where = ["."]               
+include = [
+    "PanelGeneMapper*",     
+    "configuration",        
+    "databases",            
+    "archive_databases"     
+]
+exclude = [
+    "tests"                 
+]
+
 [build-system]
 requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
