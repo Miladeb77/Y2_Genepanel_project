@@ -10,7 +10,6 @@
 ### Prerequisites
 1. Python version `>=3.9`
 2. `pip` and `setuptools` installed.
-3. Ensure your environment supports `cron` for scheduled updates (Linux/Mac) or a task scheduler for Windows.
 
 ### Steps
 1. Clone the repository or download the source code:
@@ -49,10 +48,14 @@ Use the `build_patient_database` module to create a patient database and integra
 ```bash
 python -m modules.build_patient_database --num_patients 1000
 ```
+## Integrate the local patient database by providing a JSON file. An example of json file can be found in the databases folder in the root directory.
+```bash
+python -m modules.build_patient_database --patient_data patient_data.json
+```
 Options:
 - `--num_patients`: Number of random patients to generate (default: 500).
 - `--patient_data`: Provide a JSON file with patient data.
-- `--default_test_date`: Default test date (e.g., `YYYY-MM-DD`).
+- `--default_test_date`: Default test date (e.g., `YYYY-MM-DD`). 
 
 ---
 
@@ -105,6 +108,7 @@ Other available commands:
 - `retrieve_genes`: Retrieve gene lists for specific R codes or patient IDs.
 - `compare_with_api`: Compare the local PanelApp database with the latest API data.
 - `generate_bed`: Generate BED file from Ensembl IDs.
+
 ---
 ### 5. Check For Updates
 Check for updates on panelapp
