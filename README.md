@@ -48,7 +48,7 @@ Use the `build_patient_database` module to create a patient database and integra
 ```bash
 python -m modules.build_patient_database --num_patients 1000
 ```
-## Integrate the local patient database by providing a JSON file. An example of json file can be found in the databases folder in the root directory.
+#### Integrate the local patient database by providing a JSON file. An example of json file can be found in the databases folder in the root directory.
 ```bash
 python -m modules.build_patient_database --patient_data patient_data.json
 ```
