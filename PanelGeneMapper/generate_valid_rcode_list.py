@@ -11,66 +11,75 @@ root_dir= os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Setup Logging
 ###############################
 
-def setup_logging(log_file_path):
+def setup_logging(info_log_file_path, error_log_file_path):
     """
-    Set up logging configuration for the application.
-
-    This function configures a logger to write log messages to a file and the console.
-    Log messages written to the file will include all INFO-level and higher messages,
-    while messages displayed in the console will include only WARNING-level and higher messages.
+    Configure logging for the application to record logs in two separate files 
+    (one for INFO+ messages and another specifically for ERROR+ messages) 
+    and also display all messages (INFO+) in the console.
 
     Parameters
     ----------
-    log_file_path : str
-        The path to the log file where log messages will be written.
+    info_log_file_path : str
+        Path to the log file for recording all INFO-level (and above) messages.
+    error_log_file_path : str
+        Path to the log file for recording only ERROR-level (and above) messages.
 
     Notes
     -----
-    - Clears any existing handlers attached to the root logger before adding new ones.
-    - Log messages follow the format: "YYYY-MM-DD HH:MM:SS [LEVEL] Message".
+    - The root logger level is set to DEBUG to allow all messages to flow 
+      through. Each handler then filters messages based on its configured 
+      level.
+    - A console handler is included to display INFO-level (and above) 
+      messages in the terminal output.
+    - The logger handlers are cleared first to avoid duplicating logs if 
+      `setup_logging` is called multiple times.
 
     Examples
     --------
-    Setting up logging for an application:
-    >>> setup_logging("application.log")
+    Setting up logging with both an info log file and an error log file:
+    >>> setup_logging("app.log", "app_error.log")
     """
-    # Create or retrieve the root logger (acts as the central logging instance)
-    logger = logging.getLogger()
 
-    # Set the overall logging level for the logger
-    # INFO level ensures that messages with severity INFO and higher are logged
-    logger.setLevel(logging.INFO)
+    # Get or create the root logger
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)  
+    # Setting to DEBUG ensures all messages are processed; 
+    # actual filtering happens in handlers.
 
     # Clear existing handlers to prevent duplicate logs
-    # This ensures that multiple calls to `setup_logging` do not add duplicate handlers
     if logger.hasHandlers():
         logger.handlers.clear()
 
-    # Configure the file handler to write logs to the specified file
-    # - INFO level captures all INFO-level and higher messages
-    # - Formatter includes timestamps, log level, and message
-    file_handler = logging.FileHandler(log_file_path)
-    file_handler.setLevel(logging.INFO)  # Log INFO and higher severity messages
-    file_handler.setFormatter(
-        logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")  # Timestamp and level in logs
-    )
+    # Create a common format for all handlers
+    formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
 
-    # Configure the console handler to display logs on the console
-    # - WARNING level ensures only WARNING and higher severity messages are displayed
-    # - Formatter is consistent with the file handler for uniformity
-    console_handler = logging.StreamHandler()  # Output logs to the console
-    console_handler.setLevel(logging.WARNING)  # Display only WARNING and higher messages
-    console_handler.setFormatter(
-        logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")  # Same format as file handler
-    )
+    # -----------------------------
+    # 1. File Handler for INFO+
+    # -----------------------------
+    file_handler = logging.FileHandler(info_log_file_path)
+    file_handler.setLevel(logging.INFO)  # Captures INFO and above
+    file_handler.setFormatter(formatter)
 
-    # Add the configured handlers to the root logger
-    # - Ensures logs are written to both the file and console
-    logger.addHandler(file_handler)  # Add the file handler
-    logger.addHandler(console_handler)  # Add the console handler
+    # -----------------------------
+    # 2. Separate File Handler for ERROR+
+    # -----------------------------
+    error_file_handler = logging.FileHandler(error_log_file_path)
+    error_file_handler.setLevel(logging.ERROR)  # Captures ERROR and above
+    error_file_handler.setFormatter(formatter)
 
-    # Log a message indicating successful setup of logging
-    logging.info("Logging setup complete.")  # Confirm successful logging configuration
+    # -----------------------------
+    # 3. Console Handler for INFO+
+    # -----------------------------
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)  # Shows INFO and above on console
+    console_handler.setFormatter(formatter)
+
+    # Add handlers to the logger
+    logger.addHandler(file_handler)
+    logger.addHandler(error_file_handler)
+    logger.addHandler(console_handler)
+
+    logging.info("Logging setup complete. INFO+ to file & console, ERROR+ to separate file.")
 
 ###############################
 # Supporting Functions
@@ -343,48 +352,36 @@ def save_disorders_to_file(disorders, output_file):
 
 def main():
     """
-    Main function to process the PanelApp directory and manage application setup.
-
-    This function performs the following steps:
+    Main function to run the application. It performs the following tasks:
     1. Locates the PanelApp directory containing the database files.
     2. Ensures the necessary directories for logs and output exist.
-    3. Sets up logging for the application.
-    4. Processes the PanelApp directory to identify new database files.
+    3. Sets up logging, including separate files for INFO+ and ERROR+ levels,
+       and console output for all INFO+ messages.
+    4. Processes the PanelApp directory to identify any new database file.
     5. Extracts unique relevant disorders from the identified database and appends them
-       to an output file, avoiding duplicates.
-
-    Exceptions are logged for debugging purposes, and the function ensures robust handling
-    of missing files, permission issues, or unexpected errors.
-
-    Parameters
-    ----------
-    None
-
-    Returns
-    -------
-    None
+       to an output text file, avoiding duplicates.
 
     Raises
     ------
     FileNotFoundError
         If the PanelApp directory or database files cannot be located.
     OSError
-        If directories cannot be created due to permissions or other issues.
+        If directories cannot be created due to permissions or other filesystem issues.
     RuntimeError
-        If logging setup fails.
+        If logging setup fails for any reason.
     Exception
-        For any unexpected errors during execution.
+        For any other unexpected errors.
 
     Examples
     --------
-    To execute the program:
+    To execute the program directly:
     >>> main()
 
-    Expected log output:
+    Typical log output:
     INFO: Attempting to locate the PanelApp directory.
     INFO: PanelApp directory located at: /path/to/panelapp
     INFO: Directories created or already exist: /path/to/logs, /path/to/output
-    INFO: Logging initialized. Log file: /path/to/logs/generate_valid_rcode_list.log
+    INFO: Logging initialized.
     INFO: Successfully processed new database and appended unique disorders.
     """
     try:
@@ -399,7 +396,7 @@ def main():
         # Step 2: Create necessary directories for logs and output
         # Define paths for logs and output directories
         logs_dir = os.path.join(root_dir, "logs")
-        valid_rcodes_output_dir = os.path.join(root_dir, "generate_valid_rcodes_output")
+        valid_rcodes_output_dir = os.path.join(root_dir, "output")
         try:
             # Create directories if they do not already exist
             os.makedirs(logs_dir, exist_ok=True)
@@ -411,11 +408,13 @@ def main():
 
         # Step 3: Set up logging
         # Define the log file path
-        valid_rcodes_log_file_path = os.path.join(logs_dir, "generate_valid_rcode_list.log")
+        info_log_file_path = os.path.join(logs_dir, "generate_valid_rcode_list.log")
+        error_log_file_path = os.path.join(logs_dir, "generate_valid_rcode_list_error.log")
         try:
             # Initialize logging configuration
-            setup_logging(valid_rcodes_log_file_path)
-            logging.info(f"Logging initialized. Log file: {valid_rcodes_log_file_path}")
+            
+            setup_logging(info_log_file_path, error_log_file_path)
+            logging.info(f"Logging initialized.")
         except Exception as e:
             # Raise an error if logging setup fails
             raise RuntimeError(f"Failed to set up logging: {e}")
@@ -468,7 +467,7 @@ if __name__ == "__main__":
     -----
     - This implementation ensures the process runs indefinitely, making it suitable
       for long-running applications that require periodic updates.
-    - The `time.sleep` function is used to introduce a delay of 120 seconds
+    - The `time.sleep` function is used to introduce a delay of 2678400 seconds
       between iterations.
     - If `main` raises an unhandled exception, the loop will terminate. To ensure
       continuous operation, consider wrapping `main` with a try-except block
@@ -489,4 +488,4 @@ if __name__ == "__main__":
         # Step 3: Pause for 120 seconds
         # - Use `time.sleep` to introduce a delay between successive executions.
         # - This prevents excessive resource usage and allows periodic updates.
-        time.sleep(120)  # Wait for 2 minutes before the next iteration
+        time.sleep(2678400)  # Wait for 1 month before the next iteration

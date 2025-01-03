@@ -15,7 +15,7 @@ import requests
 app = Flask(__name__, static_folder='static')
 
 # Directory where logs will be stored
-LOG_DIR = "./logs/Flask_app_logs"  
+LOG_DIR = "./logs/"  
 
 def setup_logging():
     """
@@ -43,8 +43,8 @@ def setup_logging():
     os.makedirs(LOG_DIR, exist_ok=True)
 
     # Define paths for the two log files
-    info_log_path = os.path.join(LOG_DIR, "info_log.log")
-    error_log_path = os.path.join(LOG_DIR, "error_log.log")
+    info_log_path = os.path.join(LOG_DIR, "Flask_info_log.log")
+    error_log_path = os.path.join(LOG_DIR, "Flask_error_log.log")
 
     # --- Create Handlers ---
     # File handler for logging informational messages (INFO and above)

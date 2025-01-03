@@ -1,0 +1,10 @@
+2025-01-03 13:37:09,665 [INFO] Logging setup complete. INFO+ to file & console, ERROR+ to separate file.
+2025-01-03 13:37:09,665 [INFO] Logging initialized.
+2025-01-03 13:37:09,665 [INFO] Ensured output directory exists: /home/miladadmin/new_Y2_Genepanel_project/new_directory/output
+2025-01-03 13:37:09,665 [INFO] Created new processed versions file: /home/miladadmin/new_Y2_Genepanel_project/new_directory/output/processed_panelApp_versions.txt
+2025-01-03 13:37:09,665 [INFO] Added new database file to processed list: panelapp_v20241223.db
+2025-01-03 13:37:09,666 [INFO] Connected to the database.
+2025-01-03 13:37:09,679 [INFO] Found 274 unique disorders.
+2025-01-03 13:37:09,679 [INFO] Database connection closed.
+2025-01-03 13:37:09,679 [INFO] Added 274 new disorders to /home/miladadmin/new_Y2_Genepanel_project/new_directory/output/unique_relevant_disorders.txt.
+2025-01-03 13:37:09,679 [INFO] Successfully processed new database and appended unique disorders.
