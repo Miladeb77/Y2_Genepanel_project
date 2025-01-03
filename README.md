@@ -20,7 +20,7 @@
 
 2. Install the dependencies using the provided `environment.yml` file:
    ```bash
-   pip install -r requirements.txt
+   pip install .
    ```
 3. Navigate to the PanelGeneMapper directory
    ```bash
