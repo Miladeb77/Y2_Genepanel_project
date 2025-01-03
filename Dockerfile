@@ -21,7 +21,7 @@ RUN apt update && apt -y install \
 RUN pip install --upgrade pip
 
 # Install dependencies from requirements.txt
-RUN pip install -r requirements.txt 
+RUN pip install .
 
 # Copy configuration files to the container's home directory
 COPY configuration/build_panelApp_database_config.json /root/.genepanel_config
