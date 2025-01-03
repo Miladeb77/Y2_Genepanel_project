@@ -10,9 +10,12 @@ from tempfile import NamedTemporaryFile
 import re
 import sys
 
+# Get the absolute path of the directory where the script is located.
 script_dir = os.path.abspath(os.path.dirname(__file__))
+# Add the script's directory to the system path to allow importing local modules.
 sys.path.append(script_dir)
 
+# Import the custom logging setup function.
 from custom_logging import setup_logging
 
 def set_working_directory():
@@ -26,12 +29,17 @@ def set_working_directory():
         OSError: If changing the directory fails.
     """
     try:
+        # Determine the script's directory using its absolute path.
         script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Log the attempt to set the working directory.
         logging.info(f"Setting working directory to the script's location: {script_dir}")
+        # Change the current working directory to the script's directory.
         os.chdir(script_dir)
+        # Log success and return the script directory path.
         logging.info("Working directory successfully set.")
         return script_dir
     except OSError as e:
+        # Log the error if changing the working directory fails and re-raise the exception.
         logging.error(f"Failed to set working directory: {e}")
         raise
 
@@ -108,25 +116,28 @@ def load_config(config_file="build_panelApp_database_config.json"):
         json.JSONDecodeError: If the configuration file is not valid JSON.
     """
     try:
-        # Get the path two directories up
+        # Calculate the base directory two levels up from the script's location.
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+        # Define the path to the 'configuration' directory.
         config_dir = os.path.join(base_dir, "configuration")
+        # Combine the configuration directory path with the file name.
         config_path = os.path.join(config_dir, config_file)
 
         logging.info(f"Attempting to load configuration from {config_path}")
+        # Open and read the JSON configuration file.
         with open(config_path, "r") as f:
             config = json.load(f)
 
         logging.info("Configuration successfully loaded.")
         return config
     except FileNotFoundError:
+        # Log an error if the file is not found and raise the exception.
         logging.error(f"Configuration file {config_file} not found in {config_dir}.")
         raise
     except json.JSONDecodeError:
+        # Log an error if the file contains invalid JSON and raise the exception.
         logging.error("Configuration file is not in valid JSON format.")
         raise
-
-
 
 def initialize_api(config):
     """
@@ -144,26 +155,31 @@ def initialize_api(config):
     try:
         logging.info("Initializing API constants from configuration.")
         
+        # Retrieve the API server URL from the configuration.
         server = config.get("server")
         if server:
             logging.info(f"API server set to: {server}")
         else:
+            # Log an error and raise KeyError if 'server' is missing.
             logging.error("Missing 'server' key in configuration.")
             raise KeyError("server")
         
+        # Construct the API panels endpoint URL.
         panels_url = f"{server}/api/v1/panels/"
         logging.info(f"API panels URL initialized as: {panels_url}")
         
+        # Retrieve the API headers from the configuration.
         headers = config.get("headers")
         if headers:
             logging.info("API headers successfully loaded.")
         else:
+            # Log an error and raise KeyError if 'headers' is missing.
             logging.error("Missing 'headers' key in configuration.")
             raise KeyError("headers")
         
         return panels_url, headers
-    
     except KeyError as e:
+        # Log an error and re-raise if a required key is missing.
         logging.error(f"Initialization failed due to missing configuration key: {e}")
         raise
 
@@ -181,35 +197,41 @@ def fetch_panels(panels_url, headers):
     Logs:
         Errors encountered during requests and final retrieval count.
     """
-    all_panels = []
-    page = 1
+    all_panels = []  # Initialize an empty list to store panel data.
+    page = 1  # Start with the first page of results.
     
     logging.info("Starting to fetch panels with relevant disorders.")
     
     while True:
         try:
+            # Log progress for every 10th page, otherwise use debug-level logging.
             if page % 10 == 0:
                 logging.info(f"Fetching page {page} of panels.")
             else:
                 logging.debug(f"Fetching page {page} of panels.")
 
+            # Send a GET request to the API with the current page number.
             response = requests.get(panels_url, headers=headers, params={"page": page})
             
+            # Check if the response is successful and contains JSON data.
             if response.status_code == 200 and response.headers.get("Content-Type") == "application/json":
-                data = response.json()
-                panels = data.get("results", [])
-                all_panels.extend(panels)
+                data = response.json()  # Parse the JSON response.
+                panels = data.get("results", [])  # Extract the panels from the response.
+                all_panels.extend(panels)  # Add the panels to the list.
                 logging.debug(f"Retrieved {len(panels)} panels from page {page}.")
                 
+                # Check if there are more pages to fetch.
                 if data.get("next") is None:
                     logging.info("No more pages to fetch.")
                     break
-                page += 1
+                page += 1  # Move to the next page.
             else:
-                logging.error(f"Failed to retrieve data on page {page}. Status code: {response.status_code} or unexpected content type.")
+                # Log an error if the request failed or the response is not as expected.
+                logging.error(f"Failed to retrieve data on page {page}. "
+                              f"Status code: {response.status_code} or unexpected content type.")
                 break
-                
         except requests.RequestException as e:
+            # Log an error if the request fails and break the loop.
             logging.error(f"Request to fetch panels failed on page {page}: {e}")
             break
 
@@ -231,22 +253,26 @@ def fetch_panel_details(panel_id, panels_url, headers):
     Logs:
         Debug-level success or failure of each request.
     """
+    # Construct the URL for the specific panel.
     panel_detail_url = f"{panels_url}{panel_id}/"
     
     logging.debug(f"Fetching details for panel ID: {panel_id}")
     
     try:
+        # Send a GET request to the API for the specific panel details.
         response = requests.get(panel_detail_url, headers=headers)
         
+        # Check if the response is successful and contains JSON data.
         if response.status_code == 200 and response.headers.get("Content-Type") == "application/json":
             logging.debug(f"Successfully retrieved details for panel ID: {panel_id}")
             return response.json()
         else:
+            # Log an error if the request failed or the response is not as expected.
             logging.error(f"Failed to retrieve details for panel ID: {panel_id}. "
                           f"Status code: {response.status_code} or unexpected content type.")
             return None
-            
     except requests.RequestException as e:
+        # Log an error if the request fails.
         logging.error(f"Request failed while fetching details for panel ID: {panel_id}. Error: {e}")
         return None
 
@@ -462,17 +488,21 @@ def main():
         Any errors occurring during script execution.
     """
     try:
+        # Calculate the logs directory path two levels up from the script's location
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        base_dir = os.path.abspath(os.path.join(script_dir, "..", ".."))
+        logs_dir = os.path.join(base_dir, "logs")
+        
         # Set up centralized logging
         setup_logging(
-            logs_dir="logs", 
-            info_log_file="panelapp_info.log", 
-            error_log_file="panelapp_error.log"
+            logs_dir=logs_dir, 
+            info_log_file="build_panelapp_info.log", 
+            error_log_file="build_panelapp_error.log"
         )
 
         logging.info("Script started successfully.")
 
-        # Set the working directory
-        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Set the working directory to the script's directory
         os.chdir(script_dir)
 
         # Load configuration and initialize the API
@@ -490,6 +520,7 @@ def main():
     except Exception as e:
         logging.error(f"An error occurred during script execution: {e}")
         raise
+
 
 
 # Run the main function if this file is executed
