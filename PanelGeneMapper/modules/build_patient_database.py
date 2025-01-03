@@ -57,8 +57,9 @@ def generate_patient_database(num_patients, patient_data, clinical_ids=None, def
     """
     Generate a patient database with options for user-defined data.
     """
+    # Set the panel retrieved date to the current date.
     panel_retrieved_date = datetime.now().strftime("%Y-%m-%d")
-
+# If user-provided patient data is available, use it to generate the database.
     if clinical_ids is None:
         clinical_ids = ['R169', 'R419', 'R56', 'R60', 'R62', 'R58', 'R233', 'R39', 'R293', 'R106', 'R330',
                         'R340', 'R414', 'R446', 'R133', 'R83', 'R295', 'R201', 'R19', 'R155', 'R413',
@@ -89,23 +90,28 @@ def generate_patient_database(num_patients, patient_data, clinical_ids=None, def
                         'R257', 'R284', 'R170', 'R326', 'R225', 'R121', 'R220', 'R172', 'R20', 'R227']
 
     patients = []
-
+# If user-provided patient data is available, use it to generate the database.
     if patient_data:
         logging.info("Using user-provided patient data.")
         for record in patient_data:
+            # Use provided data or generate defaults for missing fields.
             patient_id = record.get("patient_id", f"Patient_{random.randint(10000000, 99999999)}")
             clinical_id = record.get("clinical_id", random.choice(clinical_ids))
             test_date = record.get("test_date", default_test_date)
+            # Add the patient record to the list.
             patients.append({
                 "patient_id": patient_id,
                 "clinical_id": clinical_id,
                 "test_date": test_date,
                 "panel_retrieved_date": panel_retrieved_date,
             })
+    # If no user-provided data, generate random patient data.
     else:
         logging.info("Generating random patient data.")
         for _ in range(num_patients):
+            # Generate a random patient ID.
             patient_id = f"Patient_{random.randint(10000000, 99999999)}"
+            # Randomly select a clinical ID from the list.
             clinical_id = random.choice(clinical_ids)
             start_of_year = datetime(datetime.now().year, 1, 1)
             random_days = random.randint(0, (datetime.now() - start_of_year).days)
@@ -152,26 +158,38 @@ def parse_arguments():
     """
     Parse command-line arguments for generating the patient database.
     """
+    # Create an argument parser for handling command-line input.
     parser = argparse.ArgumentParser(description="Generate a patient database.")
 
+    # Argument for specifying the number of patient records to generate.
+    # Defaults to 500 if not provided by the user.
     parser.add_argument(
         "--num_patients",
         type=int,
         default=500,
         help="Number of patient records to generate (default: 500)."
     )
+
+    # Argument for providing a JSON file containing patient data.
+    # If not specified, patient data will be generated programmatically.
     parser.add_argument(
         "--patient_data_file",
         type=str,
         default=None,
         help="JSON file containing patient data (optional)."
     )
+
+    # Argument for specifying the name of the SQLite database file.
+    # Defaults to 'patient_database.db' if not provided.
     parser.add_argument(
         "--database_name",
         type=str,
         default="patient_database.db",
         help="Name of the SQLite database file (default: patient_database.db)."
     )
+
+    # Argument for setting a default test date for the generated patients.
+    # If not provided, the test date will be randomly generated or left unset.
     parser.add_argument(
         "--default_test_date",
         type=str,
@@ -179,7 +197,9 @@ def parse_arguments():
         help="Default test date in 'YYYY-MM-DD' format for generated patients."
     )
 
+    # Parse the command-line arguments and return the parsed values.
     return parser.parse_args()
+
 
 
 def main():
@@ -199,8 +219,8 @@ def main():
         # Set up centralized logging using custom_logging
         setup_logging(
             logs_dir=logs_dir,
-            info_log_file="patient_build_info.log",
-            error_log_file="patient_build_error.log"
+            info_log_file="build_patient_info.log",
+            error_log_file="build_patient_error.log"
         )
 
         logging.info("Patient database script started.")

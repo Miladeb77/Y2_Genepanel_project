@@ -58,7 +58,6 @@ def parse_arguments():
     update_parser = subparsers.add_parser("update", help="Update the local PanelApp database.")
 
     # Subparser for listing patients
-    # Subparser for listing patients
     list_parser = subparsers.add_parser("list_patients", help="List all patients in the database.")
     list_parser.add_argument("--patient_db", default=default_patient_db, help="Please provide patient database path if not default directory. The default is <..,..,databases\patient_database>")
     list_parser.add_argument("--save", action="store_true", help="Save the patient list to a CSV file.")

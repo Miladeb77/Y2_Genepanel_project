@@ -66,17 +66,37 @@ Use the `build_panelApp_database` module to create a patient database and integr
 ```bash
 python -m modules.build_panelApp_database
 ```
-Options:
-
 ---
 
 ### 4. Retrieve Data
 Use the `panelgenemapper.py` script to:
-- Add patients.
 - Retrieve gene lists.
-- List patients.
+- Generate Bed Files.
+- List patients in the database.
+- Add patients
+- Check for updates on PanelApp.
+- Update the PanelApp local database.
+
+### Available commands:
+PanelGeneMapper: A Tool for Integrating PanelApp Data with Lab Systems and Generating BED Files.
+
+positional arguments:
+  {update,list_patients,add_patient,retrieve_genes,compare_with_api,generate_bed}
+
+    update              Update the local PanelApp database.
+    list_patients       List all patients in the database.
+    add_patient         Add a new patient to the database.
+    retrieve_genes      Retrieve gene lists for specific R codes or patient IDs.
+    compare_with_api    Compare the local PanelApp database with the latest API data.
+    generate_bed        Generate BED file from Ensembl IDs.
+    
+    -h, --help            Use this to view commands
 
 #### Example: Retrieve Gene List
+
+```bash
+python panelgenemapper.py retrieve_genes --help
+```
 ```bash
 python panelgenemapper.py retrieve_genes --r_code R169 --output_file gene_list.csv
 ```
@@ -88,6 +108,11 @@ python panelgenemapper.py retrieve_genes --r_code R420 --patient_id Patient_8596
 ```
 
 #### Example: Generate a Bed File
+
+```bash
+python panelgenemapper.py generate_bed --help
+```
+
 ```bash
 python panelgenemapper.py generate_bed --csv_file Y2_Genepanel_project/output/gene_list.csv
 ```
@@ -101,15 +126,17 @@ python panelgenemapper.py generate_bed --patient_id Patient_85969552
 python panelgenemapper.py generate_bed --r_code R420 --patient_id Patient_85969552
 ```
 
-Other available commands:
-- `update`: Update the PanelApp database.
-- `list_patients`: List all patients in the database.
-- `add_patient`: Add a new patient.
-- `retrieve_genes`: Retrieve gene lists for specific R codes or patient IDs.
-- `compare_with_api`: Compare the local PanelApp database with the latest API data.
-- `generate_bed`: Generate BED file from Ensembl IDs.
+#### Example: Add new patients to the database 
 
----
+```bash
+python panelgenemapper.py add_patient --help
+```
+
+```bash
+python panelgenemapper.py add_patient --patient_id Patient_1234  --clinical_id R169 --test_date 2023-11-11
+```
+
+
 ### 5. Check For Updates
 Check for updates on panelapp
 ```bash
@@ -117,7 +144,7 @@ python panelgenemapper.py compare_with_api
 ```
 
 ### 6. Run Updates
-Schedule periodic updates using the `panelgenemapper.py` script:
+Check for updates periodically using the `panelgenemapper.py` script:
 ```bash
 python panelgenemapper.py update
 ```

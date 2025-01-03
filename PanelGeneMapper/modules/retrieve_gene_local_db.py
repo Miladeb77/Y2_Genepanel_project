@@ -11,24 +11,34 @@ def get_databases_dir():
     Get the path to the databases directory two levels up from the script location.
     Ensures the directory exists.
     """
+    # Get the absolute path of the directory where the script is located.
     script_dir = os.path.abspath(os.path.dirname(__file__))
+    # Navigate two levels up from the script directory to reach the project directory.
     project_dir = os.path.abspath(os.path.join(script_dir, "..", ".."))
+    # Construct the path to the "databases" directory within the project directory.
     databases_dir = os.path.join(project_dir, "databases")
+    # Create the "databases" directory if it doesn't already exist.
     os.makedirs(databases_dir, exist_ok=True)
+    # Return the absolute path to the "databases" directory.
     return databases_dir
-
 
 def get_archive_dir():
     """
     Get the path to the archive_databases directory two levels up from the script location.
     Ensures the directory exists.
     """
+    # Get the absolute path of the directory where the script is located.
     script_dir = os.path.abspath(os.path.dirname(__file__))
+    # Navigate two levels up from the script directory to reach the project directory.
     project_dir = os.path.abspath(os.path.join(script_dir, "..", ".."))
+    # Construct the path to the "databases" directory within the project directory.
     databases_dir = os.path.join(project_dir, "databases")
-    archive_dir = os.path.join(databases_dir , "archive_databases")
+    # Construct the path to the "archive_databases" directory inside the "databases" directory.
+    archive_dir = os.path.join(databases_dir, "archive_databases")
+    # Create the "archive_databases" directory if it doesn't already exist.
     os.makedirs(archive_dir, exist_ok=True)
     return archive_dir
+
 
 
 def retrieve_latest_panelapp_db(archive_folder=None, panelapp_db=None):
