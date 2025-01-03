@@ -1,14 +1,16 @@
+import os
+import sys
+import logging
+import json
+import re
+import gzip
+import sqlite3
+from datetime import datetime
+from tempfile import NamedTemporaryFile
+
 import requests
 import pandas as pd
-import json
-import sqlite3
-import os
-import logging
-from datetime import datetime
-import gzip
-from tempfile import NamedTemporaryFile
-import re
-import sys
+
 
 # Get the absolute path of the directory where the script is located.
 script_dir = os.path.abspath(os.path.dirname(__file__))

@@ -1,8 +1,8 @@
-import requests
+import os
 import logging
+import requests
 import pandas as pd
 import sqlite3
-import os
 
 
 def get_panel_app_list():
@@ -14,29 +14,29 @@ def get_panel_app_list():
     """
     server = "https://panelapp.genomicsengland.co.uk"
     ext = "/api/v1/panels/"
+    headers = {"Content-Type": "application/json"}
 
-    r = requests.get(server + ext, headers={"Content-Type": "application/json"})
+    # Initial API call
+    response = requests.get(server + ext, headers=headers)
 
     # Handle API errors
-    if not r.ok:
-        r.raise_for_status()
+    if not response.ok:
+        response.raise_for_status()
 
-    # Create the initial DataFrame
-    panel_app_df = pd.json_normalize(r.json(), record_path=["results"])
-
-    # List to store all DataFrames
+    # Normalize the first page of results
+    panel_app_df = pd.json_normalize(response.json(), record_path=["results"])
     all_dataframes = [panel_app_df]
 
-    # Iterate over remaining pages
-    while r.json().get("next") is not None:
-        r = requests.get(r.json()["next"], headers={"Content-Type": "application/json"})
-        next_page_df = pd.json_normalize(r.json(), record_path=["results"])
+    # Fetch subsequent pages
+    while response.json().get("next") is not None:
+        response = requests.get(response.json()["next"], headers=headers)
+        next_page_df = pd.json_normalize(response.json(), record_path=["results"])
         all_dataframes.append(next_page_df)
 
-    # Concatenate all DataFrames
+    # Combine all pages into a single DataFrame
     panel_app_df = pd.concat(all_dataframes, ignore_index=True)
 
-    # Select only id and version columns
+    # Return only id and version columns, renamed for clarity
     return panel_app_df[["id", "version"]].rename(columns={"id": "panel_id"})
 
 
@@ -53,13 +53,16 @@ def compare_panel_versions():
         project_dir = os.path.abspath(os.path.join(script_dir, "..", ".."))
         databases_dir = os.path.join(project_dir, "databases")
 
-        # Find the latest PanelApp database in the databases directory
-        db_files = [f for f in os.listdir(databases_dir) if f.startswith("panelapp_v") and f.endswith(".db")]
+        # Find the latest PanelApp database
+        db_files = [
+            f for f in os.listdir(databases_dir)
+            if f.startswith("panelapp_v") and f.endswith(".db")
+        ]
         if not db_files:
-            logging.error("No `panelapp_v` database found in the working directory.")
+            logging.error("No `panelapp_v` database found in the databases directory.")
             return
-        
-        # Sort and select the latest version
+
+        # Sort databases by version and select the latest
         db_files.sort(reverse=True)
         latest_db = db_files[0]
         db_path = os.path.join(databases_dir, latest_db)
@@ -67,32 +70,27 @@ def compare_panel_versions():
         logging.info(f"Using latest local PanelApp database: {latest_db}")
 
         # Connect to the local database
-        conn = sqlite3.connect(db_path)
-
-        # Retrieve panel_id and version from the local database
-        local_df = pd.read_sql_query("SELECT panel_id, version FROM panel_info", conn)
-        conn.close()
+        with sqlite3.connect(db_path) as conn:
+            local_df = pd.read_sql_query("SELECT panel_id, version FROM panel_info", conn)
 
         logging.info("Retrieved panel data from the local database.")
 
-        # Call `get_panel_app_list` to fetch data from the API
+        # Fetch panel data from the API
         api_df = get_panel_app_list()
-
         logging.info("Retrieved panel data from the API.")
 
-        # Compare the two DataFrames
+        # Compare the local database and API versions
         merged_df = pd.merge(
             local_df,
             api_df,
             on="panel_id",
-            how="inner",
+            how="outer",
             suffixes=("_local", "_api"),
             indicator=True,
         )
 
-        # Find differences
+        # Find and log differences
         differences = merged_df[merged_df["_merge"] != "both"]
-
         if not differences.empty:
             logging.warning("Differences found between local and API versions:")
             logging.warning(differences)
@@ -103,10 +101,10 @@ def compare_panel_versions():
         logging.error(f"An error occurred during comparison: {e}")
 
 
-
 if __name__ == "__main__":
     # Configure logging
-    logs_dir = os.path.join(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")), "logs")
+    project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    logs_dir = os.path.join(project_dir, "logs")
     os.makedirs(logs_dir, exist_ok=True)
     log_file = os.path.join(logs_dir, "panelapp_comparison.log")
 

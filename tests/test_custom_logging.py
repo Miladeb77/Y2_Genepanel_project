@@ -1,8 +1,11 @@
-import pytest
 import logging
 import os
 from unittest.mock import patch, MagicMock
+
+import pytest
+
 from PanelGeneMapper.modules.custom_logging import setup_logging
+
 
 @pytest.fixture
 def mock_os():

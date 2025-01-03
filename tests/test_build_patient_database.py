@@ -1,14 +1,17 @@
-import pytest
-import pandas as pd
 import os
 import sqlite3
-from unittest.mock import patch, MagicMock
 from datetime import datetime
+from unittest.mock import patch, MagicMock
+
+import pytest
+import pandas as pd
+
 from PanelGeneMapper.modules.build_patient_database import (
     load_patient_data,
     generate_patient_database,
     save_to_database,
 )
+
 
 # Mock data for tests
 MOCK_PATIENT_JSON = [

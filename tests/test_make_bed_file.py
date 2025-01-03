@@ -1,7 +1,9 @@
-import pytest
 import os
 import shutil
 import sqlite3
+
+import pytest
+
 from PanelGeneMapper.modules.make_bed_file import (
     create_local_db,
     cache_exon_data,

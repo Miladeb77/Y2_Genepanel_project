@@ -1,8 +1,14 @@
-from logging.handlers import RotatingFileHandler
 import os
 import logging
+from logging.handlers import RotatingFileHandler
 
-def setup_logging(logs_dir="logs", info_log_file="info.log", error_log_file="error.log", clear_logs=False):
+
+def setup_logging(
+    logs_dir="logs",
+    info_log_file="info.log",
+    error_log_file="error.log",
+    clear_logs=False,
+):
     """
     Configure logging with optional clearing or rotating log files.
 
@@ -23,8 +29,8 @@ def setup_logging(logs_dir="logs", info_log_file="info.log", error_log_file="err
 
         # Clear log files if specified
         if clear_logs:
-            open(info_log_path, 'w').close()
-            open(error_log_path, 'w').close()
+            open(info_log_path, "w").close()
+            open(error_log_path, "w").close()
 
         # Get the root logger
         logger = logging.getLogger()
@@ -35,22 +41,32 @@ def setup_logging(logs_dir="logs", info_log_file="info.log", error_log_file="err
             logger.handlers.pop()
 
         # INFO handler with optional rotation
-        info_handler = RotatingFileHandler(info_log_path, maxBytes=15 * 1024, backupCount=1)
+        info_handler = RotatingFileHandler(
+            info_log_path, maxBytes=15 * 1024, backupCount=1
+        )
         info_handler.setLevel(logging.INFO)
         info_handler.addFilter(lambda record: record.levelno <= logging.INFO)
-        info_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        info_handler.setFormatter(
+            logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        )
         logger.addHandler(info_handler)
 
         # ERROR handler with optional rotation
-        error_handler = RotatingFileHandler(error_log_path, maxBytes=15 * 1024, backupCount=1)
+        error_handler = RotatingFileHandler(
+            error_log_path, maxBytes=15 * 1024, backupCount=1
+        )
         error_handler.setLevel(logging.ERROR)
-        error_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        error_handler.setFormatter(
+            logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        )
         logger.addHandler(error_handler)
 
         # Console handler
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.INFO)
-        console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        console_handler.setFormatter(
+            logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        )
         logger.addHandler(console_handler)
 
         logging.info("Logging setup complete.")

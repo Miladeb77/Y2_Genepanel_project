@@ -1,15 +1,18 @@
-import pytest
 import os
 import sqlite3
-import pandas as pd
 import gzip
 import tempfile
+
+import pandas as pd
+import pytest
+
 from PanelGeneMapper.modules.retrieve_gene_local_db import (
     get_databases_dir,
     get_archive_dir,
     retrieve_latest_panelapp_db,
     connect_and_join_databases,
 )
+
 
 @pytest.fixture
 def setup_environment():
