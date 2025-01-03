@@ -1,14 +1,17 @@
-import pytest
 import os
 import sqlite3
-import pandas as pd
 from unittest import mock
+
+import pandas as pd
+import pytest
+
 from PanelGeneMapper.modules.patient_db_lookup_add import (
     get_databases_dir,
     list_patients,
     add_patient,
     save_to_database,
 )
+
 
 @pytest.fixture
 def mock_database_dir(tmp_path):

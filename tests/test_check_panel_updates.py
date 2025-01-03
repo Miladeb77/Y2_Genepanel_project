@@ -1,9 +1,15 @@
-import pytest
-import pandas as pd
-import sqlite3
 import os
+import sqlite3
 from unittest.mock import patch, MagicMock
-from PanelGeneMapper.modules.check_panel_updates import get_panel_app_list, compare_panel_versions
+
+import pandas as pd
+import pytest
+
+from PanelGeneMapper.modules.check_panel_updates import (
+    get_panel_app_list,
+    compare_panel_versions,
+)
+
 
 # Mock data for the PanelApp API response
 MOCK_API_RESPONSE = {

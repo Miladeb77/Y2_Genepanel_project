@@ -1,9 +1,11 @@
-import pytest
-from unittest.mock import patch, MagicMock, mock_open
 import os
 import json
-import pandas as pd
 from datetime import datetime
+from unittest.mock import patch, MagicMock, mock_open
+
+import pytest
+import pandas as pd
+
 from PanelGeneMapper.modules.build_panelApp_database import (
     set_working_directory,
     load_config,

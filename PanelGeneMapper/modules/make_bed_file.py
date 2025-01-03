@@ -1,14 +1,21 @@
-import requests
-import logging
-import sqlite3
+import os
+import glob
 import csv
 import json
-import glob
+import logging
 import argparse
+import sqlite3
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import os
+
+import requests
 import pandas as pd
-from retrieve_gene_local_db import get_archive_dir, get_databases_dir, connect_and_join_databases,  retrieve_latest_panelapp_db
+
+from retrieve_gene_local_db import (
+    get_archive_dir,
+    get_databases_dir,
+    connect_and_join_databases,
+    retrieve_latest_panelapp_db,
+)
 
 # Set up logging
 # Define log directory two levels up
