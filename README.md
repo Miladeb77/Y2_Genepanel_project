@@ -89,9 +89,8 @@ positional arguments:
     retrieve_genes      Retrieve gene lists for specific R codes or patient IDs.
     compare_with_api    Compare the local PanelApp database with the latest API data.
     generate_bed        Generate BED file from Ensembl IDs.
-
-optional arguments:
-  -h, --help            Use this to view commands
+    
+    -h, --help            Use this to view commands
 
 #### Example: Retrieve Gene List
 
