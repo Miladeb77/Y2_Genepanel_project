@@ -1683,42 +1683,6 @@ def compare_live_panelapp():
         return jsonify({"error": "An internal server error occurred."}), 500
     
 if __name__ == '__main__':
-    """
-    Main entry point for the Flask application.
-
-    This block initializes logging, loads configuration settings, and starts the
-    Flask application. It ensures that the application is configured correctly before
-    running, and logs critical information for debugging and monitoring.
-
-    Steps
-    -----
-    1. Initialize logging to capture application activity.
-    2. Load the application configuration from a JSON file.
-    3. Extract key configuration details for the application (e.g., database paths).
-    4. Handle critical errors during configuration loading by logging and exiting.
-    5. Start the Flask application in debug mode.
-
-    Notes
-    -----
-    - The configuration file (`./config/app_config.json`) must exist and contain valid
-      JSON data with the required keys: `patient_db_path`, `panel_dir`, and `r_code_file`.
-    - Logging is configured via the `setup_logging()` function, which ensures that all
-      activity is recorded to the appropriate logs and the console.
-    - The application runs in debug mode for development purposes; this should be disabled
-      in production environments.
-
-    Examples
-    --------
-    Running the Flask application:
-    >>> python app.py
-
-    Expected console output (if configuration is valid):
-    >>> INFO:root:Starting the Flask application setup...
-    >>> INFO:root:Configuration loaded. Patient DB Path: /path/to/db, Panel Directory: /path/to/panel_dir
-    >>> INFO:root:Starting Flask application...
-    """
-
-
-    # Step 3: Start the Flask application
+#Start the Flask application
     logging.info("Starting Flask application...")  # Log the application startup process
     app.run(debug=True)  # Run the application in debug mode (development only)
