@@ -1,0 +1,7 @@
+
+{
+    "patient_db_path": "/Users/Karolina/Y2_Genepanel_project/databases/patient_database.db",
+    "panel_dir": "/Users/Karolina/Y2_Genepanel_project/databases",
+    "r_code_file": "/Users/Karolina/Y2_Genepanel_project/generate_valid_rcodes_output/unique_relevant_disorders.txt",
+    "build_panelApp_database_config.json": "/Users/Karolina/Y2_Genepanel_project/configuration/build_panelApp_database_config.json"
+}   
