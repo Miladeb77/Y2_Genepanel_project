@@ -375,7 +375,7 @@ def format_data(data):
     except Exception as e:
         logging.error(f"An error occurred during data formatting: {e}")
         raise
-
+    
 def save_to_database(df, script_dir, table_name="panel_info"):
     """
     Save the DataFrame to an SQLite database, with old database files archived.
@@ -402,9 +402,7 @@ def save_to_database(df, script_dir, table_name="panel_info"):
         # Define the directories
         project_dir = os.path.abspath(os.path.join(script_dir, "..", ".."))
         databases_dir = os.path.join(project_dir, "databases")
-        archive_dir = os.path.join(project_dir, "archive_databases")
         os.makedirs(databases_dir, exist_ok=True)
-        os.makedirs(archive_dir, exist_ok=True)
 
         # Generate the database name
         date_str = datetime.now().strftime("%Y%m%d")
@@ -412,19 +410,30 @@ def save_to_database(df, script_dir, table_name="panel_info"):
         database_path = os.path.join(databases_dir, database_name)
         logging.info(f"Database path set to: {database_path}")
 
-        # Archive old databases
-        files_in_directory = os.listdir(databases_dir)
-        for db_file in files_in_directory:
+        # Archive folder for old databases
+        archive_folder = os.path.join(databases_dir, "archive_databases")
+        os.makedirs(archive_folder, exist_ok=True)
+        logging.info(f"Archive folder located at: {archive_folder}")
+
+        # Archive old database files
+        for db_file in os.listdir(databases_dir):
             if db_file.startswith("panelapp_v") and db_file.endswith(".db") and db_file != database_name:
                 old_db_path = os.path.join(databases_dir, db_file)
-                archived_db_path = os.path.join(archive_dir, db_file)
+                archived_db_path = os.path.join(archive_folder, db_file)
+                logging.info(f"Archiving old database file: {old_db_path}")
+
+                # Rename to archive folder
                 os.rename(old_db_path, archived_db_path)
-                
-                # Compress the archived file
+                logging.info(f"Moved {old_db_path} to {archived_db_path}")
+
+                # Compress the old database
                 with open(archived_db_path, 'rb') as f_in, gzip.open(f"{archived_db_path}.gz", 'wb') as f_out:
                     f_out.writelines(f_in)
+                logging.info(f"Compressed archived database: {archived_db_path}.gz")
+
+                # Remove the uncompressed file
                 os.remove(archived_db_path)
-        logging.info("Archived and compressed old database files.")
+                logging.info(f"Deleted uncompressed archived database: {archived_db_path}")
 
         # Save the new database
         conn = sqlite3.connect(database_path)
@@ -443,6 +452,7 @@ def save_to_database(df, script_dir, table_name="panel_info"):
     except Exception as e:
         logging.error(f"An unexpected error occurred while saving data to the database: {e}")
         raise
+
 
 
 def main():
