@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PanelApp Patient Search</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>PanelApp Patient Search</h1>
+    </header>
+    <main>
+        <section class="form-section">
+            <h2>Search for Patient or R Code</h2>
+            <form id="search-form">
+                <label for="search-type">Search By:</label>
+                <select id="search-type" name="search-type">
+                    <option value="patient_id">Patient ID</option>
+                    <option value="r_code">R Code</option>
+                </select>
+                <label for="search-input">Enter Value:</label>
+                <input type="text" id="search-input" name="search-input" placeholder="e.g., Patient_002 or R186" required>
+                <button type="submit">Search</button>
+            </form>
+            <button id="add-patient-btn" style="display:none;">Add a new patient</button>
+            <button id="add-r-code-btn" style="display:none;">Add a new R code analysis</button>
+        </section>
+        <section id="results-section">
+            <h2>Results</h2>
+            <div id="results"></div>
+        </section>
+        <section id="input-section" style="display:none;">
+            <h2>Provide Additional Information</h2>
+            <div id="additional-input"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 PanelApp Project</p>
+    </footer>
+
+    <!-- Modal for user confirmation (Yes/No) -->
+    <div id="rcode-modal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <button id="yes-btn">Yes</button>
+            <button id="no-btn">No</button>
+        </div>
+    </div>
+
+    <!-- Modal for entering R Code -->
+    <div id="rcode-input-modal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <p id="rcode-input-message">Please provide the R Code for the patient:</p>
+            <input type="text" id="rcode-input-box" placeholder="Enter R Code" />
+            <button id="rcode-submit-btn">Submit</button>
+            <button id="rcode-cancel-btn">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Modal for entering Patient IDs -->
+    <div id="patient-id-input-modal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <p id="patient-id-input-message">Please enter the patient ID(s). If there are multiple patient IDs, separate them by comma:</p>
+            <input type="text" id="patient-id-input-box" placeholder="Patient_anydigit,Patient_anydigit,... or Patient_anydigit" />
+            <button id="patient-id-submit-btn">Submit</button>
+            <button id="patient-id-cancel-btn">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Modal for entering a new Patient ID -->
+    <div id="add-patient-modal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <p id="add-patient-message">Please provide a Patient ID.</p>
+            <input type="text" id="add-patient-id-input" placeholder="Patient_123" />
+            <button id="add-patient-submit-btn">Submit</button>
+            <button id="add-patient-cancel-btn">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Invalid Format Modal (to show an error if the new single Patient ID is not valid):-->
+    <div id="invalid-format-modal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <p id="invalid-format-message">Invalid format for the patient ID; the format should be Patient_anydigit</p>
+            <button id="invalid-format-ok-btn">Ok</button>
+        </div>
+    </div>
+
+    <!-- Modal for entering a new R code for existing patient -->
+    <div id="add-r-code-modal" class="modal" role="dialog" aria-hidden="true" style="display:none;">
+        <div class="modal-content">
+            <p>Please provide an R code:</p>
+            <input type="text" id="add-r-code-input" placeholder="e.g., R18">
+            <button id="add-r-code-submit-btn">Submit</button>
+            <button id="add-r-code-cancel-btn">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Modal for invalid R code -->
+    <div id="invalid-r-code-modal" class="modal" role="dialog" aria-hidden="true" style="display:none;">
+        <div class="modal-content">
+            <p>Invalid r code; Please provide a valid r code</p>
+            <button id="invalid-r-code-ok-btn">Ok</button>
+        </div>
+    </div>
+    
+    <!-- Confirmation modal for comparing live panel data -->
+    <div id="compare-confirmation-modal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <p>This will compare HGNC IDs to those available on PanelApp website and might take a while. Are you sure you want to continue?</p>
+            <button id="compare-confirm-yes-btn">Yes</button>
+            <button id="compare-confirm-no-btn">No</button>
+        </div>
+    </div>
+
+    <!-- Please wait modal (with a loading icon) -->
+    <div id="compare-wait-modal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <p>Please wait, we are connecting to the PanelApp website...</p>
+            <!-- Add a simple loading icon -->
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <!-- Results modal for showing differences or no changes -->
+    <div id="compare-results-modal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content" id="compare-results-content">
+            <!-- Content populated by script.js -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
