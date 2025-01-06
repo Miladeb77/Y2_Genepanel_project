@@ -15,7 +15,7 @@ keywords = ["bioinformatics", "genomics", "gene panels", "bed files", "panelapp"
 requires-python = ">=3.9"
 
 dependencies = [
-    "Flask==2.3.3",
+    "flask==2.3.3",
     "flask-restx==1.1.0",
     "requests==2.32.3",
     "pandas==2.2.3",
