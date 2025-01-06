@@ -1,5 +1,3 @@
-# tests_flaskapp/test_unit_config.py
-
 import pytest
 from app import load_config
 import json
