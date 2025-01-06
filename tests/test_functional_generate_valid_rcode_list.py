@@ -109,7 +109,7 @@ def test_full_process_with_new_database(temp_root_dir, mock_time_sleep, mock_log
         main()
 
     # Assert: Check that the output file contains the unique disorders
-    output_dir = temp_root_dir / "generate_valid_rcodes_output"
+    output_dir = temp_root_dir / "output"
     output_file = output_dir / "unique_relevant_disorders.txt"
     assert output_file.exists(), "Output file should be created."
 
@@ -180,7 +180,7 @@ def test_full_process_with_existing_database(temp_root_dir, mock_time_sleep, moc
         main()
 
     # Assert: Check that the output file contains the unique disorders only once
-    output_dir = temp_root_dir / "generate_valid_rcodes_output"
+    output_dir = temp_root_dir / "output"
     output_file = output_dir / "unique_relevant_disorders.txt"
     assert output_file.exists(), "Output file should be created."
 
@@ -262,7 +262,7 @@ def test_full_process_no_new_disorders(temp_root_dir, mock_time_sleep, mock_logg
         main()
 
     # Assert: Check that the output file remains unchanged
-    output_dir = temp_root_dir / "generate_valid_rcodes_output"
+    output_dir = temp_root_dir / "output"
     output_file = output_dir / "unique_relevant_disorders.txt"
     assert output_file.exists(), "Output file should exist."
 
