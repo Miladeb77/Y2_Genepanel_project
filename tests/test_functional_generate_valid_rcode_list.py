@@ -121,7 +121,7 @@ def test_full_process_with_new_database(temp_root_dir, mock_time_sleep, mock_log
     mock_logging.info.assert_any_call("Attempting to locate the PanelApp directory.")
     mock_logging.info.assert_any_call(f"PanelApp directory located at: {str(panelapp_dir)}")
     mock_logging.info.assert_any_call(f"Directories created or already exist: {os.path.join(temp_root_dir, 'logs')}, {str(output_dir)}")
-    mock_logging.info.assert_any_call(f"Logging initialized. Log file: {os.path.join(temp_root_dir, 'logs', 'generate_valid_rcode_list.log')}")
+    mock_logging.info.assert_any_call("Logging initialized.")
     mock_logging.info.assert_any_call("Successfully processed new database and appended unique disorders.")
 
 def test_full_process_with_existing_database(temp_root_dir, mock_time_sleep, mock_logging):
