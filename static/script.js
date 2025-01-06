@@ -21,7 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const addPatientModal = document.getElementById("add-patient-modal");
     const addPatientIdInput = document.getElementById("add-patient-id-input");
     const addPatientSubmitBtn = document.getElementById("add-patient-submit-btn");
+<<<<<<< HEAD
     const addPatientCancelBtn = document.getElementById("add-patient-cancel-btn");
+=======
+>>>>>>> recover_static
 
     const invalidFormatModal = document.getElementById("invalid-format-modal");
     const invalidFormatOkBtn = document.getElementById("invalid-format-ok-btn");
@@ -394,16 +397,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderTable(data) {
         currentResultsData = data;
+<<<<<<< HEAD
         const table = document.createElement("table");
         table.className = "results-table";
 
         const headerRow = document.createElement("tr");
         ["Patient ID", "Clinical ID", "Panel Version", "Test Date", "Panel Retrieved Date", "Gene Panel", "HGNC IDs", "Compare to Live panelApp"].forEach((header) => {
+=======
+    
+        // Show the results section if it's hidden
+        const resultsSection = document.getElementById("results-section");
+        if (resultsSection.style.display === "none") {
+            resultsSection.style.display = "block";
+        }
+    
+        const table = document.createElement("table");
+        table.className = "results-table";
+    
+        const headerRow = document.createElement("tr");
+        ["Patient ID", "Clinical ID", "Panel Version", "Test Date", "Gene Panel", "HGNC IDs", "Compare to Live panelApp"].forEach((header) => {
+>>>>>>> recover_static
             const th = document.createElement("th");
             th.textContent = header;
             headerRow.appendChild(th);
         });
         table.appendChild(headerRow);
+<<<<<<< HEAD
 
         data.forEach((row) => {
             const tableRow = document.createElement("tr");
@@ -437,6 +456,89 @@ document.addEventListener("DOMContentLoaded", () => {
             tableRow.appendChild(hgncIdsCell);
 
             // Add Compare to Live panelApp Column
+=======
+    
+        data.forEach((row) => {
+            const tableRow = document.createElement("tr");
+    
+            const patientIdCell = document.createElement("td");
+            patientIdCell.textContent = row.patient_id || "N/A";
+            tableRow.appendChild(patientIdCell);
+    
+            const clinicalIdCell = document.createElement("td");
+            clinicalIdCell.textContent = row.relevant_disorders || "N/A";
+            tableRow.appendChild(clinicalIdCell);
+    
+            const panelVersionCell = document.createElement("td");
+            panelVersionCell.textContent = row.panel_version || "N/A";
+            tableRow.appendChild(panelVersionCell);
+    
+            const testDateCell = document.createElement("td");
+            testDateCell.textContent = row.test_date || "N/A";
+            tableRow.appendChild(testDateCell);
+    
+            /*
+            // Commenting out the Panel Retrieved Date as it is not currently relevant to display.
+            // This can be uncommented and included later if the feature needs to be shown in the UI.
+            const panelRetrievedDateCell = document.createElement("td");
+            panelRetrievedDateCell.textContent = row.panel_retrieved_date || "N/A";
+            tableRow.appendChild(panelRetrievedDateCell);
+            */
+            
+            const genePanelCell = document.createElement("td");
+            if (row.gene_panel && row.gene_panel.length > 5) {
+                const shortContent = row.gene_panel.slice(0, 5).join(", ");
+                const fullContent = row.gene_panel.join(", ");
+                const toggleButton = document.createElement("button");
+                toggleButton.textContent = "Show More";
+    
+                const contentDiv = document.createElement("div");
+                contentDiv.textContent = shortContent;
+    
+                toggleButton.onclick = () => {
+                    if (toggleButton.textContent === "Show More") {
+                        contentDiv.textContent = fullContent;
+                        toggleButton.textContent = "Show Less";
+                    } else {
+                        contentDiv.textContent = shortContent;
+                        toggleButton.textContent = "Show More";
+                    }
+                };
+                genePanelCell.appendChild(contentDiv);
+                genePanelCell.appendChild(toggleButton);
+            } else {
+                genePanelCell.textContent = row.gene_panel ? row.gene_panel.join(", ") : "N/A";
+            }
+            tableRow.appendChild(genePanelCell);
+    
+            const hgncIdsCell = document.createElement("td");
+            if (row.hgnc_ids && row.hgnc_ids.length > 5) {
+                const shortContent = row.hgnc_ids.slice(0, 5).join(", ");
+                const fullContent = row.hgnc_ids.join(", ");
+                const toggleButton = document.createElement("button");
+                toggleButton.textContent = "Show More";
+    
+                const contentDiv = document.createElement("div");
+                contentDiv.textContent = shortContent;
+    
+                toggleButton.onclick = () => {
+                    if (toggleButton.textContent === "Show More") {
+                        contentDiv.textContent = fullContent;
+                        toggleButton.textContent = "Show Less";
+                    } else {
+                        contentDiv.textContent = shortContent;
+                        toggleButton.textContent = "Show More";
+                    }
+                };
+    
+                hgncIdsCell.appendChild(contentDiv);
+                hgncIdsCell.appendChild(toggleButton);
+            } else {
+                hgncIdsCell.textContent = row.hgnc_ids ? row.hgnc_ids.join(", ") : "N/A";
+            }
+            tableRow.appendChild(hgncIdsCell);
+    
+>>>>>>> recover_static
             const compareCell = document.createElement("td");
             if (row.relevant_disorders && row.hgnc_ids && row.hgnc_ids.length > 0) {
                 const compareButton = document.createElement("button");
@@ -449,6 +551,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 compareCell.textContent = "N/A";
             }
             tableRow.appendChild(compareCell);
+<<<<<<< HEAD
 
             table.appendChild(tableRow);
         });
@@ -456,6 +559,16 @@ document.addEventListener("DOMContentLoaded", () => {
         resultsDiv.innerHTML = "";
         resultsDiv.appendChild(table);
     }
+=======
+    
+            table.appendChild(tableRow);
+        });
+    
+        resultsDiv.innerHTML = "";
+        resultsDiv.appendChild(table);
+    }
+    
+>>>>>>> recover_static
 
     function openCompareConfirmationModal(clinicalId, hgncIDs) {
         currentClinicalIdToCompare = clinicalId;

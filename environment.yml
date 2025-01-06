@@ -2,6 +2,11 @@ name: PanelApp_project
 channels:
   - conda-forge
   - defaults
+  - conda-forge 
 dependencies:
   - python=3.9
+<<<<<<< HEAD
   - pip
+=======
+  - pip=22.0.4
+>>>>>>> recover_static

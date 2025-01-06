@@ -1,0 +1,69 @@
+2024-12-20 21:32:03,713 - INFO - Logging setup complete.
+2024-12-20 21:32:03,713 - INFO - Logs will be written to C:\Users\nourm\Project\group_project\github_release\Y2_Genepanel_project\logs
+2024-12-20 21:32:03,714 - INFO - Script started successfully.
+2024-12-20 21:32:03,714 - INFO - Attempting to load configuration from C:\Users\nourm\Project\group_project\github_release\Y2_Genepanel_project\configuration\build_panelApp_database_config.json
+2024-12-20 21:32:03,714 - INFO - Configuration successfully loaded.
+2024-12-20 21:32:03,714 - INFO - Initializing API constants from configuration.
+2024-12-20 21:32:03,717 - INFO - API server set to: https://panelapp.genomicsengland.co.uk
+2024-12-20 21:32:03,717 - INFO - API panels URL initialized as: https://panelapp.genomicsengland.co.uk/api/v1/panels/
+2024-12-20 21:32:03,717 - INFO - API headers successfully loaded.
+2024-12-20 21:32:03,717 - INFO - Starting to fetch panels with relevant disorders.
+2024-12-20 21:32:09,107 - INFO - No more pages to fetch.
+2024-12-20 21:32:09,108 - INFO - Finished fetching panels. Total panels retrieved: 451
+2024-12-20 21:32:09,109 - INFO - Starting to process panel data.
+2024-12-20 21:32:09,110 - INFO - Total panels to process: 451
+2024-12-20 21:33:47,141 - ERROR - Failed to retrieve details for panel ID: 511. Status code: 504 or unexpected content type.
+2024-12-20 21:34:47,356 - ERROR - Failed to retrieve details for panel ID: 1209. Status code: 504 or unexpected content type.
+2024-12-22 11:50:41,198 - INFO - Logging setup complete.
+2024-12-22 11:50:41,199 - INFO - Logs will be written to /Users/Karolina/Y2_Genepanel_project/logs
+2024-12-22 11:50:41,199 - INFO - Script started successfully.
+2024-12-22 11:50:41,199 - INFO - Attempting to load configuration from /Users/Karolina/Y2_Genepanel_project/configuration/build_panelApp_database_config.json
+2024-12-22 11:50:41,199 - INFO - Configuration successfully loaded.
+2024-12-22 11:50:41,199 - INFO - Initializing API constants from configuration.
+2024-12-22 11:50:41,199 - INFO - API server set to: https://panelapp.genomicsengland.co.uk
+2024-12-22 11:50:41,199 - INFO - API panels URL initialized as: https://panelapp.genomicsengland.co.uk/api/v1/panels/
+2024-12-22 11:50:41,199 - INFO - API headers successfully loaded.
+2024-12-22 11:50:41,199 - INFO - Starting to fetch panels with relevant disorders.
+2024-12-22 11:50:47,375 - INFO - No more pages to fetch.
+2024-12-22 11:50:47,376 - INFO - Finished fetching panels. Total panels retrieved: 451
+2024-12-22 11:50:47,376 - INFO - Starting to process panel data.
+2024-12-22 11:50:47,376 - INFO - Total panels to process: 451
+2024-12-22 11:51:15,102 - INFO - Processed 90/451 panels (20%)
+2024-12-22 11:51:36,295 - INFO - Processed 180/451 panels (40%)
+2024-12-22 11:52:08,593 - INFO - Processed 270/451 panels (60%)
+2024-12-22 11:53:08,313 - INFO - Processed 450/451 panels (100%)
+2024-12-22 11:53:08,756 - INFO - Completed processing all panel data.
+2024-12-22 11:53:08,756 - INFO - Starting to format data for database insertion.
+2024-12-22 11:53:08,890 - INFO - Data loaded into DataFrame with 40302 rows and 22 columns.
+2024-12-22 11:53:08,892 - INFO - Formatting list column 'relevant_disorders' into comma-separated strings.
+2024-12-22 11:53:08,900 - WARNING - Column 'publications' not found in DataFrame.
+2024-12-22 11:53:08,900 - INFO - Formatting list column 'evidence' into comma-separated strings.
+2024-12-22 11:53:08,912 - INFO - Formatting list column 'phenotypes' into comma-separated strings.
+2024-12-22 11:53:08,924 - INFO - Formatting list column 'transcript' into comma-separated strings.
+2024-12-22 11:53:08,929 - WARNING - Column 'types' not found in DataFrame.
+2024-12-22 11:53:08,929 - INFO - Converting column 'hash_id' to string data type.
+2024-12-22 11:53:08,936 - INFO - Converting column 'name' to string data type.
+2024-12-22 11:53:08,937 - INFO - Converting column 'disease_group' to string data type.
+2024-12-22 11:53:08,937 - INFO - Converting column 'disease_sub_group' to string data type.
+2024-12-22 11:53:08,938 - INFO - Converting column 'status' to string data type.
+2024-12-22 11:53:08,939 - INFO - Converting column 'version' to string data type.
+2024-12-22 11:53:08,940 - INFO - Converting column 'version_created' to string data type.
+2024-12-22 11:53:08,940 - INFO - Converting column 'relevant_disorders' to string data type.
+2024-12-22 11:53:08,941 - INFO - Converting column 'panel_type' to string data type.
+2024-12-22 11:53:08,942 - INFO - Converting column 'gene_symbol' to string data type.
+2024-12-22 11:53:08,943 - INFO - Converting column 'hgnc_symbol' to string data type.
+2024-12-22 11:53:08,944 - INFO - Converting column 'mode_of_pathogenicity' to string data type.
+2024-12-22 11:53:08,946 - INFO - Converting column 'phenotypes' to string data type.
+2024-12-22 11:53:08,947 - INFO - Converting column 'mode_of_inheritance' to string data type.
+2024-12-22 11:53:08,948 - INFO - Converting column 'transcript' to string data type.
+2024-12-22 11:53:08,949 - INFO - Converting column 'hgnc_id' to string data type.
+2024-12-22 11:53:08,950 - INFO - Converting column 'evidence' to string data type.
+2024-12-22 11:53:08,951 - INFO - Converting column 'gene_ensembl_id_GRch38' to string data type.
+2024-12-22 11:53:08,955 - INFO - Data formatting completed successfully.
+2024-12-22 11:53:08,955 - INFO - Starting to save data to the SQLite database.
+2024-12-22 11:53:08,956 - INFO - Database path set to: /Users/Karolina/Y2_Genepanel_project/databases/panelapp_v20241222.db
+2024-12-22 11:53:09,876 - INFO - Archived and compressed old database files.
+2024-12-22 11:53:09,880 - INFO - Connected to database '/Users/Karolina/Y2_Genepanel_project/databases/panelapp_v20241222.db'
+2024-12-22 11:53:10,193 - INFO - Data successfully saved to table 'panel_info' in '/Users/Karolina/Y2_Genepanel_project/databases/panelapp_v20241222.db'
+2024-12-22 11:53:10,193 - INFO - Database connection to '/Users/Karolina/Y2_Genepanel_project/databases/panelapp_v20241222.db' closed.
+2024-12-22 11:53:10,193 - INFO - Script completed successfully.

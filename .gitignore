@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Ignore __pycache__ folders
 __pycache__/
 
@@ -18,3 +19,6 @@ venv/
 # Ignore environment configuration
 *.env
 
+=======
+.DS_Store
+>>>>>>> recover_static

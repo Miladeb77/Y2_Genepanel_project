@@ -26,9 +26,26 @@
             <button id="add-patient-btn" style="display:none;">Add a new patient</button>
             <button id="add-r-code-btn" style="display:none;">Add a new R code analysis</button>
         </section>
+<<<<<<< HEAD
         <section id="results-section">
             <h2>Results</h2>
             <div id="results"></div>
+=======
+        <section id="results-section" style="display: none;">
+            <h2>Results</h2>
+            <div id="results">
+                <div class="long-content">
+                    <p class="preview">Gene Panel: Short preview of the content...</p>
+                    <p class="full-content hidden">Gene Panel: Full content with additional details about the gene panel.</p>
+                    <button class="toggle-button">Show More</button>
+                </div>
+                <div class="long-content">
+                    <p class="preview">HGNC IDs: Short preview of the content...</p>
+                    <p class="full-content hidden">HGNC IDs: Full content with all the detailed IDs.</p>
+                    <button class="toggle-button">Show More</button>
+                </div>
+            </div>
+>>>>>>> recover_static
         </section>
         <section id="input-section" style="display:none;">
             <h2>Provide Additional Information</h2>
@@ -129,6 +146,18 @@
         </div>
     </div>
 
+<<<<<<< HEAD
+=======
+    <!-- Modal for confirmation before adding a new patient or R code -->
+    <div id="add-confirmation-modal" class="modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <p id="add-confirmation-message">This action will create a new record. Are you sure you want to proceed?</p>
+            <button id="add-confirm-yes-btn">Yes</button>
+            <button id="add-confirm-no-btn">No</button>
+        </div>
+    </div>
+
+>>>>>>> recover_static
     <script src="script.js"></script>
 </body>
 </html>

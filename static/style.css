@@ -8,7 +8,11 @@ body {
 
 header {
     background-color: #0078D4;
+<<<<<<< HEAD
     color: rgb(241, 176, 176);
+=======
+    color: white; /* Change text color to white*/
+>>>>>>> recover_static
     padding: 20px;
     text-align: center;
 }
@@ -206,4 +210,30 @@ button:focus, input:focus {
         width: 90%;
         padding: 15px;
     }
+<<<<<<< HEAD
+=======
+    
+    .hidden {
+        display: none;
+    }
+    
+    .toggle-button {
+        background-color: #0078D4;
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 10px 15px;
+        font-size: 16px;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    
+    .toggle-button:hover {
+        background-color: #0056A6;
+    }
+    
+    .long-content p {
+        transition: max-height 0.5s ease, opacity 0.5s ease;
+    }    
+>>>>>>> recover_static
 }
