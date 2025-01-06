@@ -147,69 +147,82 @@ except Exception as e:
 
 def decompress_if_needed(file_path):
     """
-    Decompress a .gz file if necessary and return the path to the decompressed version.
+    Decompress a .gz file if necessary and return the path to the decompressed version,
+    ensuring we don't skip re-decompression if the existing .db is corrupted.
 
-    This function checks if the given file is a Gzip-compressed file. If it is, the function
-    decompresses it to the same directory, ensuring the decompressed file is valid and not
-    empty. It uses file locking to prevent race conditions when handling files in parallel
-    processes. If the file is already decompressed or not compressed, it returns the
-    original path.
+    This function checks if the given file is Gzip-compressed. If it is, the function:
+    1) Creates or checks a lock file to prevent race conditions.
+    2) If the .db doesn't exist or is zero-bytes, decompresses anew.
+    3) If the .db exists, runs a minimal SQLite query to verify integrity.
+       - If the query fails, re-decompress to ensure a valid .db file.
+    4) Returns the path to the (now guaranteed valid) .db file.
 
     Parameters
     ----------
     file_path : str
-        Path to the file, either compressed (ending with `.gz`) or uncompressed.
+        Path to the file, either compressed ('.gz') or uncompressed.
 
     Returns
     -------
     str
-        The path to the decompressed file if the file was compressed, or the original file path
-        if no decompression was needed.
+        The path to the decompressed .db file if file_path was compressed,
+        or the original file_path if not compressed.
 
     Raises
     ------
     ValueError
         If the decompressed file is empty after decompression.
+    sqlite3.DatabaseError
+        If an existing .db is corrupted and cannot be decompressed properly.
     Exception
-        If any error occurs during decompression.
+        For other unexpected errors during decompression or validation.
     """
     try:
-        # Check if the file has a `.gz` extension, indicating it is compressed
-        if file_path.endswith('.gz'):
-            # Generate the output path by removing the `.gz` extension
-            decompressed_file = file_path[:-3]
-            # Define a lock file to ensure thread/process-safe operations
-            lock_file = f"{decompressed_file}.lock"
+        # If the file isn't gzipped, do nothing
+        if not file_path.endswith('.gz'):
+            return file_path
 
-            logging.info(f"Preparing to decompress file: {file_path}")
+        # Example: "panelapp_v20241212.db.gz" -> "panelapp_v20241212.db"
+        decompressed_file = file_path[:-3]
+        lock_file = f"{decompressed_file}.lock"
 
-            # Use file locking to prevent race conditions in concurrent environments
-            with FileLock(lock_file):
-                # Check if decompressed file already exists and is valid (not empty)
-                if not os.path.exists(decompressed_file) or os.path.getsize(decompressed_file) == 0:
-                    logging.info(f"Decompressing file: {file_path} -> {decompressed_file}")
-                    # Open the compressed file for reading and the output file for writing
-                    with gzip.open(file_path, 'rb') as f_in, open(decompressed_file, 'wb') as f_out:
-                        # Copy the content from the compressed file to the output file
-                        shutil.copyfileobj(f_in, f_out)
+        logging.info(f"Preparing to decompress file: {file_path}")
 
-                    # Verify that the decompressed file is not empty
-                    if os.path.getsize(decompressed_file) == 0:
-                        raise ValueError(f"Decompressed file is empty: {decompressed_file}")
-                else:
-                    logging.info(f"Decompressed file already exists and is valid: {decompressed_file}")
+        with FileLock(lock_file):
+            needs_decompress = False
 
-            # Return the path to the decompressed file
-            return decompressed_file
+            # 1) If the decompressed .db doesn't exist or is zero-size, we must decompress
+            if not os.path.exists(decompressed_file) or os.path.getsize(decompressed_file) == 0:
+                needs_decompress = True
+            else:
+                # 2) The .db file exists. Let's do a quick SQLite check:
+                try:
+                    conn = sqlite3.connect(decompressed_file)
+                    # Minimal query to confirm there's at least one table or no corruption
+                    conn.execute("SELECT name FROM sqlite_master LIMIT 1;")
+                    conn.close()
+                    logging.info(f"Decompressed file {decompressed_file} exists and looks valid; skipping re-decompression.")
+                except sqlite3.DatabaseError:
+                    # If this query fails, the .db is likely corrupted
+                    logging.warning(f"{decompressed_file} is corrupted. Will re-decompress {file_path}.")
+                    needs_decompress = True
 
-        # If the file is not compressed, return the original path
-        return file_path
+            # 3) Decompress if flagged
+            if needs_decompress:
+                logging.info(f"Decompressing file: {file_path} -> {decompressed_file}")
+                with gzip.open(file_path, 'rb') as f_in, open(decompressed_file, 'wb') as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+
+                # Verify that the decompressed file is not empty
+                if os.path.getsize(decompressed_file) == 0:
+                    raise ValueError(f"Decompressed file is empty: {decompressed_file}")
+
+        return decompressed_file
 
     except Exception as e:
-        # Log any error encountered during decompression
         logging.error(f"Error while decompressing {file_path}: {e}")
-        # Re-raise the exception to propagate it for upstream handling
         raise
+
 
 def find_relevant_panel_db(panel_retrieved_date, root_dir):
     """
@@ -386,105 +399,138 @@ def find_most_recent_panel_date(root_dir):
 
 def extract_genes_and_metadata_from_panel(db_path, clinical_id):
     """
-    Extract gene symbols, HGNC IDs, and metadata associated with a specific clinical ID.
+    Extract gene symbols, HGNC IDs, and metadata for a given clinical ID from a PanelApp 
+    SQLite database, then remove the decompressed .db file so only the .gz remains.
 
-    This function connects to a PanelApp SQLite database, queries the `panel_info` table to 
-    retrieve the gene symbols and HGNC IDs associated with a given clinical ID, and extracts 
-    the `version_created` metadata for the clinical ID. It handles decompression of `.gz` 
-    databases if required and ensures cleanup of temporary decompressed files.
+    This function:
+    1. Decompresses the database file (if it is .gz).
+    2. Queries the `panel_info` table to retrieve:
+       - Gene symbols
+       - HGNC IDs
+       - `version_created` metadata
+    3. Closes the SQLite connection.
+    4. Removes the decompressed .db (and its .lock file) to maintain only the .gz file.
 
     Parameters
     ----------
     db_path : str
-        Path to the PanelApp SQLite database, compressed or uncompressed.
+        The path to the PanelApp SQLite database file, which may be compressed (".db.gz")
+        or uncompressed (".db").
     clinical_id : str
-        The clinical ID for which data is being retrieved.
+        The clinical identifier (for example, "R46") used to filter results in the 
+        `panel_info` table.
 
     Returns
     -------
-    tuple
-        A tuple containing:
-        - list of str : List of gene symbols associated with the clinical ID.
-        - list of str : List of HGNC IDs associated with the clinical ID.
-        - str or None : The version created metadata as a string, or None if not available.
+    genes : list of str
+        A list of distinct gene symbols matching the given clinical ID.
+    hgnc_ids : list of str
+        A list of corresponding HGNC IDs for each gene symbol.
+    version_created : str or None
+        The database version creation date (if available), otherwise None.
 
     Raises
     ------
     Exception
-        If there is an issue reading the database or querying the data.
+        If an error occurs during decompression, database connection, or data retrieval.
 
     Notes
     -----
-    The database is expected to have a `panel_info` table with columns:
-    - `gene_symbol`: Gene symbols associated with the clinical ID.
-    - `hgnc_id`: HGNC IDs associated with the clinical ID.
-    - `relevant_disorders`: Clinical IDs stored as substrings in this column.
-    - `version_created`: Metadata indicating the database version creation date.
+    - The `.gz` file is decompressed into a temporary `.db` file via `decompress_if_needed`.
+    - If the file was indeed decompressed, the `.db` and its `.lock` file are both deleted 
+      in the `finally` block to ensure only the compressed file remains in the archive.
+    - The `panel_info` table is expected to have columns:
+      `gene_symbol`, `hgnc_id`, `relevant_disorders`, and `version_created`.
 
     Examples
     --------
-    >>> extract_genes_and_metadata_from_panel('/path/to/database.db.gz', 'R123')
-    (['GeneA', 'GeneB'], ['HGNC:12345', 'HGNC:67890'], '2024-11-19')
+    >>> # Example usage
+    >>> genes, hgnc_ids, version_created = extract_genes_and_metadata_from_panel(
+    ...     'panelapp_v20250106.db.gz', 
+    ...     'R123'
+    ... )
+    >>> print(genes, hgnc_ids, version_created)
+    (['GENE1', 'GENE2'], ['HGNC:1234', 'HGNC:5678'], '2025-01-06')
     """
-    decompressed = False  # Flag to track if the database was decompressed
-    original_path = db_path  # Save the original database path
 
-    # Decompress the database if it's compressed and get the path to the decompressed file
+    decompressed = False  # Indicates if the file was decompressed in this function
+    original_path = db_path  # Store the original path (could be .db or .db.gz)
+
+    # Decompress the database file if it's a .gz; otherwise, do nothing.
     db_path = decompress_if_needed(db_path)
     if db_path != original_path:
-        decompressed = True  # Mark that the database was decompressed
+        decompressed = True  # The file was actually decompressed
 
     try:
-        # Log the start of the data extraction process
+        # ---------------------------
+        # 1. Open the database
+        # ---------------------------
         logging.info(f"Extracting data for clinical ID: {clinical_id} from {db_path}")
-
-        # Connect to the SQLite database
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
-        # Query the `panel_info` table for gene symbols and HGNC IDs associated with the clinical ID
+        # ---------------------------
+        # 2. Query gene_symbol, hgnc_id
+        # ---------------------------
         cursor.execute(
             """
-            SELECT DISTINCT gene_symbol, hgnc_id 
-            FROM panel_info 
+            SELECT DISTINCT gene_symbol, hgnc_id
+            FROM panel_info
             WHERE relevant_disorders LIKE ?
             """,
-            (f"%{clinical_id}%",)  # Match the clinical ID as a substring
+            (f"%{clinical_id}%",)
         )
         results = cursor.fetchall()
+        genes = [row[0] for row in results]
+        hgnc_ids = [row[1] for row in results]
 
-        # Extract gene symbols and HGNC IDs from the query results
-        genes = [row[0] for row in results]  # List of gene symbols
-        hgnc_ids = [row[1] for row in results]  # List of HGNC IDs
-
-        # Query the `version_created` field for the clinical ID
+        # ---------------------------
+        # 3. Query version_created
+        # ---------------------------
         cursor.execute(
             """
-            SELECT DISTINCT version_created 
-            FROM panel_info 
+            SELECT DISTINCT version_created
+            FROM panel_info
             WHERE relevant_disorders LIKE ?
             """,
             (f"%{clinical_id}%",)
         )
         version_result = cursor.fetchone()
-        version_created = version_result[0] if version_result else None  # Get the version metadata
+        version_created = version_result[0] if version_result else None
 
-        # Close the database connection
+        # ---------------------------
+        # 4. Close the database
+        # ---------------------------
         conn.close()
 
-        # Log the results of the queries
         logging.info(f"Genes found for clinical ID {clinical_id}: {genes}")
         logging.info(f"HGNC IDs found for clinical ID {clinical_id}: {hgnc_ids}")
         logging.info(f"Version created for clinical ID {clinical_id}: {version_created}")
 
-        # Return the extracted data as a tuple
         return genes, hgnc_ids, version_created
 
     finally:
-        # Clean up the decompressed file if it was created
-        if decompressed and not os.path.exists(f"{db_path}.lock"):  # Ensure no active locks
-            os.remove(db_path)  # Delete the decompressed file
-            logging.info(f"Deleted decompressed file: {db_path}")
+        # -------------------------------------
+        # 5. Clean up the decompressed .db
+        # -------------------------------------
+        if decompressed:
+            # Remove the .db file if it exists
+            try:
+                if os.path.exists(db_path):
+                    os.remove(db_path)
+                    logging.info(f"Deleted decompressed file: {db_path}")
+            except Exception as e:
+                logging.warning(f"Could not remove decompressed file {db_path}: {e}")
+            
+            # Remove the .lock file if it exists
+            lock_file = f"{db_path}.lock"
+            try:
+                if os.path.exists(lock_file):
+                    os.remove(lock_file)
+                    logging.info(f"Deleted lock file: {lock_file}")
+            except Exception as e:
+                logging.warning(f"Could not remove lock file {lock_file}: {e}")
+
 
 def get_patient_data(patient_id, db_path):
     """
