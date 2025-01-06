@@ -1,5 +1,3 @@
-# tests_generate_valid_rcodes/functional_test_generate_valid_rcode_list.py
-
 import os
 import pytest
 import logging
