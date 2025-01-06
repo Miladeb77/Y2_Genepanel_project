@@ -485,7 +485,7 @@ if __name__ == "__main__":
         # - This processes the PanelApp directory and handles all required operations.
         main()
 
-        # Step 3: Pause for 120 seconds
+        # Step 3:
         # - Use `time.sleep` to introduce a delay between successive executions.
         # - This prevents excessive resource usage and allows periodic updates.
         time.sleep(2678400)  # Wait for 1 month before the next iteration
