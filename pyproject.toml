@@ -1,0 +1,61 @@
+[project]
+name = "PanelGeneMapper"
+dynamic = ["version"]
+description = "A tool to integrate PanelApp data with patient lab systems, enabling gene panel management and BED file generation."
+license = {file = "LICENSE.txt"}
+authors = [
+    {name = "Nour Mahfel", email = "nour.mahfel@postgrad.manchester.ac.uk"},
+    {name = "Milad Ebrahimian", email = "milad.ebrahimian@postgrad.manchester.ac.uk"},
+    {name = "Karolina Janik", email = "karolina.janik@postgrad.manchester.ac.uk"},
+    {name = "Mary Murray", email = "mary.murray-2@postgrad.manchester.ac.uk"},
+    {name = "Limia Varghese", email = "limia.varghese@postgrad.manchester.ac.uk"}
+]
+readme = "README.md"
+keywords = ["bioinformatics", "genomics", "gene panels", "bed files", "panelapp"]
+requires-python = ">=3.9"
+
+dependencies = [
+    "flask==2.3.3",
+    "flask-restx==1.1.0",
+    "requests==2.32.3",
+    "pandas==2.2.3",
+    "pytest==8.3.4",
+    "pytest-cov==3.0.0",
+    "pytest-xdist==2.5.0",
+    "requests-mock==1.11.0",
+    "filelock==3.12.2",
+    "sqlalchemy==2.0.36",
+    "python-dateutil==2.9.0.post0",
+    "python-json-logger==2.0.7",
+    "pytz==2024.1",
+    "appdirs==1.4.4",
+    "flask_sqlalchemy==3.0.0",
+]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.9",
+    ]
+
+[project.urls]
+"Homepage" = "https://github.com/Miladeb77/Y2_Genepanel_project.git"
+"Source" = "https://github.com/Miladeb77/Y2_Genepanel_project"
+"Bug Reports" = "https://github.com/Miladeb77/Y2_Genepanel_project/logs"
+
+[tool.setuptools.packages.find]
+where = ["."]               
+include = [
+    "PanelGeneMapper*",     
+    "configuration",        
+    "databases",            
+    "archive_databases"     
+]
+exclude = [
+    "tests"                 
+]
+
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"

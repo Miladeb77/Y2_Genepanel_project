@@ -1,0 +1,10 @@
+Flask==2.3.3
+flask-restx==1.1.0
+filelock==3.12.2
+pandas==2.2.3
+requests==2.32.3
+pytest==8.3.4
+pytz==2024.1
+python-dateutil==2.9.0.post0
+python-json-logger==2.0.7
+sqlalchemy==2.0.36

@@ -1,0 +1,36 @@
+2025-01-02 14:07:43,331 - INFO - Logging setup complete.
+2025-01-02 14:07:43,332 - INFO - Logs will be written to C:\Users\nourm\Project\group_project\Y2_Genepanel_project\logs
+2025-01-02 14:07:43,336 - INFO - Listing patients from database: C:\Users\nourm\Project\group_project\Y2_Genepanel_project\databases\patient_database.db
+2025-01-02 14:07:43,339 - INFO - Listing all patients and their clinical IDs:
+2025-01-02 14:07:43,339 - INFO -             patient_id clinical_id
+0     Patient_93657888        R446
+1     Patient_17518368        R197
+2     Patient_68609981        R124
+3     Patient_71714238        R225
+4     Patient_85969552        R420
+...                ...         ...
+1007  Patient_88507539        R112
+1008  Patient_90184161        R295
+1009  Patient_78102873        R170
+1010  Patient_33511129        R270
+1011            P12345      R98765
+
+[1012 rows x 2 columns]
+2025-01-02 14:07:44,537 - INFO - Logging setup complete.
+2025-01-02 14:07:44,537 - INFO - Logs will be written to C:\Users\nourm\Project\group_project\Y2_Genepanel_project\logs
+2025-01-02 14:07:44,540 - INFO - Listing patients from database: C:\Users\nourm\Project\group_project\Y2_Genepanel_project\databases\patient_database.db
+2025-01-02 14:07:44,542 - INFO - Listing all patients and their clinical IDs:
+2025-01-02 14:07:44,542 - INFO -             patient_id clinical_id
+0     Patient_93657888        R446
+1     Patient_17518368        R197
+2     Patient_68609981        R124
+3     Patient_71714238        R225
+4     Patient_85969552        R420
+...                ...         ...
+1007  Patient_88507539        R112
+1008  Patient_90184161        R295
+1009  Patient_78102873        R170
+1010  Patient_33511129        R270
+1011            P12345      R98765
+
+[1012 rows x 2 columns]

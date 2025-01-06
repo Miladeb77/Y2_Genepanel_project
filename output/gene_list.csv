@@ -1,0 +1,6 @@
+patient_id,clinical_id,test_date,panel_retrieved_date,disease_name,version,version_created,panel_r_code,hgnc_symbol,hgnc_id,gene_ensembl_id_GRch38
+Patient_33962892,"R41.3, R42.1",2025-01-02,2025-01-03,Leber hereditary optic neuropathy,2.9,2024-02-29,"R41.3, R42.1",MT-ND1,HGNC:7455,ENSG00000198888
+Patient_33962892,"R41.3, R42.1",2025-01-02,2025-01-03,Leber hereditary optic neuropathy,2.9,2024-02-29,"R41.3, R42.1",MT-ND4,HGNC:7459,ENSG00000198886
+Patient_33962892,"R41.3, R42.1",2025-01-02,2025-01-03,Leber hereditary optic neuropathy,2.9,2024-02-29,"R41.3, R42.1",MT-ND6,HGNC:7462,ENSG00000198695
+Patient_33962892,"R41.3, R42.1",2025-01-02,2025-01-03,Leber hereditary optic neuropathy,2.9,2024-02-29,"R41.3, R42.1",PRICKLE3,HGNC:6645,ENSG00000012211
+Patient_33962892,"R41.3, R42.1",2025-01-02,2025-01-03,Leber hereditary optic neuropathy,2.9,2024-02-29,"R41.3, R42.1",DNAJC30,HGNC:16410,ENSG00000176410
