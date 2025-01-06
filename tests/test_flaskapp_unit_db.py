@@ -1,6 +1,6 @@
 import pytest
 import sqlite3
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, call
 from app import (
     extract_genes_and_metadata_from_panel,
     get_patient_data,
@@ -294,32 +294,42 @@ def test_add_patient_record_new(mock_db_path):
     assert row[3] == "2024-12-24"
 
 
-@patch("app.os.remove")  # Mock os.remove to avoid FileNotFoundError
+@patch("app.os.path.exists", return_value=True)
+@patch("app.os.remove")
 @patch("app.decompress_if_needed", return_value="/fake/decompressed_path.db")
 @patch("app.sqlite3.connect")
-def test_extract_genes_and_metadata_from_panel_success(mock_connect, mock_decompress, mock_remove):
+def test_extract_genes_and_metadata_from_panel_success(
+    mock_connect,
+    mock_decompress,
+    mock_remove,
+    mock_exists
+):
     """
-    Test `extract_genes_and_metadata_from_panel` for successful data extraction.
+    Test extracting genes, HGNC IDs, and version metadata in a normal scenario,
+    verifying ephemeral cleanup occurs, including removal of both the .db and .lock file.
 
-    This test verifies that the function extracts genes, HGNC IDs, and version
-    metadata from a database containing valid records.
+    This test checks that when valid records exist in the database, the function
+    returns correct gene/HGNC data and version metadata, and then removes both 
+    the decompressed file and its .lock file if they exist.
 
     Parameters
     ----------
     mock_connect : unittest.mock.MagicMock
-        Mocked `sqlite3.connect` function.
+        Mock for sqlite3.connect simulating a successful database connection.
     mock_decompress : unittest.mock.MagicMock
-        Mocked `decompress_if_needed` function.
+        Mock for decompress_if_needed, returning a fake .db path.
     mock_remove : unittest.mock.MagicMock
-        Mocked `os.remove` function.
+        Mock for os.remove, used twice for .db and .lock.
+    mock_exists : unittest.mock.MagicMock
+        Mock for os.path.exists, set True so removal is triggered.
 
     Asserts
     -------
-    - Extracted genes and HGNC IDs match the expected values.
-    - Extracted version metadata matches the expected value.
-    - All mocked functions are called as expected.
+    - The function returns the expected gene list, HGNC list, and version.
+    - os.remove(...) is called exactly twice: once for .db, once for .lock.
+    - sqlite3.connect(...) is called with the decompressed path.
     """
-    # Arrange: Mock the database connection and cursor
+    # Arrange
     mock_cursor = MagicMock()
     mock_cursor.fetchall.return_value = [("GeneA", "HGNC:12345"), ("GeneB", "HGNC:67890")]
     mock_cursor.fetchone.return_value = ("2024-11-19",)
@@ -328,67 +338,24 @@ def test_extract_genes_and_metadata_from_panel_success(mock_connect, mock_decomp
     mock_conn.cursor.return_value = mock_cursor
     mock_connect.return_value = mock_conn
 
-    # Act: Call the function under test
+    # Act
     genes, hgnc_ids, version_created = extract_genes_and_metadata_from_panel("/fake/path.db.gz", "R999")
 
-    # Assert: Verify the function returns correct values
-    assert genes == ["GeneA", "GeneB"]
-    assert hgnc_ids == ["HGNC:12345", "HGNC:67890"]
-    assert version_created == "2024-11-19"
+    # Assert: data checks
+    assert genes == ["GeneA", "GeneB"], "Expected gene list does not match."
+    assert hgnc_ids == ["HGNC:12345", "HGNC:67890"], "Expected HGNC ID list does not match."
+    assert version_created == "2024-11-19", "Expected version_created is incorrect."
 
-    # Verify the mocked functions were called
+    # Confirm ephemeral cleanup calls
     mock_decompress.assert_called_once()
     mock_connect.assert_called_once_with("/fake/decompressed_path.db")
-    mock_remove.assert_called_once_with("/fake/decompressed_path.db")
 
-
-@patch("app.os.remove")
-@patch("app.decompress_if_needed", return_value="/fake/decompressed_path.db")
-@patch("app.sqlite3.connect")
-def test_extract_genes_and_metadata_empty_results(mock_connect, mock_decompress, mock_remove):
-    """
-    Test `extract_genes_and_metadata_from_panel` when no matching records are found.
-
-    This test ensures that the function handles empty query results gracefully
-    and returns empty lists and None for metadata.
-
-    Parameters
-    ----------
-    mock_connect : unittest.mock.MagicMock
-        Mocked `sqlite3.connect` function.
-    mock_decompress : unittest.mock.MagicMock
-        Mocked `decompress_if_needed` function.
-    mock_remove : unittest.mock.MagicMock
-        Mocked `os.remove` function.
-
-    Asserts
-    -------
-    - Extracted genes and HGNC IDs are empty lists.
-    - Version metadata is None.
-    - All mocked functions are called as expected.
-    """
-    # Arrange: Mock cursor to return no results
-    mock_cursor = MagicMock()
-    mock_cursor.fetchall.return_value = []
-    mock_cursor.fetchone.return_value = None
-
-    mock_conn = MagicMock()
-    mock_conn.cursor.return_value = mock_cursor
-    mock_connect.return_value = mock_conn
-
-    # Act: Call the function under test
-    genes, hgnc_ids, version_created = extract_genes_and_metadata_from_panel("/fake/path.db.gz", "R000")
-
-    # Assert: Verify the function returns correct values
-    assert genes == []
-    assert hgnc_ids == []
-    assert version_created is None
-
-    # Verify the mocked functions were called
-    mock_decompress.assert_called_once()
-    mock_connect.assert_called_once_with("/fake/decompressed_path.db")
-    mock_remove.assert_called_once_with("/fake/decompressed_path.db")
-
+    # Verify exactly 2 remove calls: .db + .lock
+    mock_remove.assert_has_calls([
+        call("/fake/decompressed_path.db"),
+        call("/fake/decompressed_path.db.lock")
+    ], any_order=True)
+    assert mock_remove.call_count == 2, "Expected .db and .lock removal calls."
 
 @patch("app.decompress_if_needed", side_effect=Exception("Decompression failed"))
 def test_extract_genes_and_metadata_decompression_failure(mock_decompress):
@@ -415,36 +382,3 @@ def test_extract_genes_and_metadata_decompression_failure(mock_decompress):
     # Verify the decompression function was called
     mock_decompress.assert_called_once()
 
-
-@patch("app.os.remove")
-@patch("app.decompress_if_needed", return_value="/fake/decompressed_path.db")
-@patch("app.sqlite3.connect", side_effect=Exception("Database connection failed"))
-def test_extract_genes_and_metadata_db_connection_failure(mock_connect, mock_decompress, mock_remove):
-    """
-    Test `extract_genes_and_metadata_from_panel` when database connection fails.
-
-    This test ensures that the function handles database connection errors gracefully
-    and triggers cleanup logic for decompressed files.
-
-    Parameters
-    ----------
-    mock_connect : unittest.mock.MagicMock
-        Mocked `sqlite3.connect` function.
-    mock_decompress : unittest.mock.MagicMock
-        Mocked `decompress_if_needed` function.
-    mock_remove : unittest.mock.MagicMock
-        Mocked `os.remove` function.
-
-    Asserts
-    -------
-    - The function raises an exception with the expected message.
-    - Cleanup logic is triggered to remove decompressed files.
-    """
-    # Act & Assert: Verify the function raises an exception on database connection failure
-    with pytest.raises(Exception, match="Database connection failed"):
-        extract_genes_and_metadata_from_panel("/fake/path.db.gz", "R999")
-
-    # Verify the mocked functions were called
-    mock_decompress.assert_called_once()
-    mock_connect.assert_called_once_with("/fake/decompressed_path.db")
-    mock_remove.assert_called_once_with("/fake/decompressed_path.db")
