@@ -398,7 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
         table.className = "results-table";
 
         const headerRow = document.createElement("tr");
-        ["Patient ID", "Clinical ID", "Panel Version", "Test Date", "Panel Retrieved Date", "Gene Panel", "HGNC IDs", "Compare to Live panelApp"].forEach((header) => {
+        ["Patient ID", "Clinical ID", "Panel Version", "Test Date", "Gene Panel", "HGNC IDs", "Compare to Live panelApp"].forEach((header) => {
             const th = document.createElement("th");
             th.textContent = header;
             headerRow.appendChild(th);
@@ -424,9 +424,13 @@ document.addEventListener("DOMContentLoaded", () => {
             testDateCell.textContent = row.test_date || "N/A";
             tableRow.appendChild(testDateCell);
 
+            /*
+            // Commenting out the Panel Retrieved Date as it is not currently relevant to display.
+            // This can be uncommented and included later if the feature needs to be shown in the UI.
             const panelRetrievedDateCell = document.createElement("td");
             panelRetrievedDateCell.textContent = row.panel_retrieved_date || "N/A";
             tableRow.appendChild(panelRetrievedDateCell);
+            */
 
             const genePanelCell = document.createElement("td");
             genePanelCell.textContent = row.gene_panel ? row.gene_panel.join(", ") : "N/A";
