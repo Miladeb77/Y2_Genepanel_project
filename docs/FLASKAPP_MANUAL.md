@@ -46,7 +46,7 @@ To change how often it runs, modify the integer value (in seconds):
 
 PanelApp Database
 
-You must have at least one valid PanelApp SQLite database file named panelapp_v*.db somewhere within the project’s directory structure. The script will look for a directory containing these files.
+You must have at least one valid PanelApp SQLite database file named panelapp_v*.db within the databases/ folder.
 
 ## How to Run the Program
 
