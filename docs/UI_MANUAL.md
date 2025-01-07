@@ -76,6 +76,13 @@ To use the UI effectively, ensure your system meets the following requirements:
 - Search for an R Code in the **Form Section**.
 - If the R Code does not exist, the system will prompt you to add it and associate it with one or more patients.
 - Use the modal to enter the R Code and a list of patient IDs (comma-separated for multiple patients), then submit.
+
+### Comparing Gene Panel Data
+- In the **Results Section**, locate the **Compare to Live PanelApp** option in the dynamically populated table.
+- Click the **Compare** button next to the relevant entry.
+- A confirmation modal will appear, indicating the operation may take some time.
+- Confirm the comparison to proceed.
+- View the results in a modal showing the differences (added or removed items) between the local data and the live PanelApp data.
 ---
 
 ## Troubleshooting UI Issues
