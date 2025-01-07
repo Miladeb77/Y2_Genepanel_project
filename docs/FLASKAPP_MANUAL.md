@@ -143,8 +143,8 @@ app.py loads critical paths and configuration details from a JSON file called ap
 
 	{
 	    "patient_db_path": "/absolute/path/to/patient_database.db",
-	    "panel_dir": "/absolute/path/to/PanelGeneMapper",
-	    "r_code_file": "/absolute/path/to/generate_valid_rcodes_output/unique_relevant_disorders.txt",
+	    "panel_dir": "/absolute/path/to/databases/",
+	    "r_code_file": "/absolute/path/to/unique_relevant_disorders.txt",
 	    "build_panelApp_database_config.json": "/absolute/path/to/configuration/build_panelApp_database_config.json"
 	}
 
