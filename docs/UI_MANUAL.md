@@ -65,10 +65,6 @@ To use the UI effectively, ensure your system meets the following requirements:
 ### Adding New Patient or R Code
 - If no results are found, the application prompts the user to add new data via modals.
 - Complete the required fields in the modal and submit.
-
-### Exporting Data
-- Use the export button (if available) in the **Results Section** to download search results.
-
 ---
 
 ## Troubleshooting UI Issues
