@@ -62,9 +62,27 @@ To use the UI effectively, ensure your system meets the following requirements:
 - Enter the search query in the input field.
 - Click the **Search** button to view results in the **Results Section**.
 
-### Adding New Patient or R Code
-- If no results are found, the application prompts the user to add new data via modals.
-- Complete the required fields in the modal and submit.
+### Adding R Code to Patient
+- Search for a patient ID in the **Form Section**.
+- If the patient exists, a button labelled **Add a new R Code analysis** will appear in the **Results Section**.
+- Click the button to open the modal, enter the R Code, and submit.
+
+### Adding Patient to R Code
+- Search for an R Code in the **Form Section**.
+- If the R Code exists but is not associated with any patients, a button labelled **Add a new patient** will appear in the **Results Section**.
+- Click the button to open the modal, enter the patient ID(s) (comma-separated for multiple patients), and submit.
+
+### Adding R Code That Does Not Exist in Database
+- Search for an R Code in the **Form Section**.
+- If the R Code does not exist, the system will prompt you to add it and associate it with one or more patients.
+- Use the modal to enter the R Code and a list of patient IDs (comma-separated for multiple patients), then submit.
+
+### Comparing Gene Panel Data
+- In the **Results Section**, locate the **Compare to Live PanelApp** option in the dynamically populated table.
+- Click the **Compare** button next to the relevant entry.
+- A confirmation modal will appear, indicating the operation may take some time.
+- Confirm the comparison to proceed.
+- View the results in a modal showing the differences (added or removed items) between the local data and the live PanelApp data.
 ---
 
 ## Troubleshooting UI Issues
@@ -100,4 +118,3 @@ We value your feedback to improve the UI experience. If you encounter issues or 
 - **Contact Support**: Email us at **PanelAppPatientSearch@support.com** for assistance.
 
 ---
-
