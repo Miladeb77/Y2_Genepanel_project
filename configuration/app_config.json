@@ -1,7 +1,7 @@
 
 {
-    "patient_db_path": "/home/miladadmin/Y2_Genepanel_project_last_working_FULL_VERSION/Y2_Genepanel_project/PanelGeneMapper/patient_database.db",
-    "panel_dir": "/home/miladadmin/Y2_Genepanel_project_last_working_FULL_VERSION/Y2_Genepanel_project/PanelGeneMapper",
-    "r_code_file": "/home/miladadmin/Y2_Genepanel_project/generate_valid_rcodes_output/unique_relevant_disorders.txt",
-    "build_panelApp_database_config.json": "/home/miladadmin/Y2_Genepanel_project/configuration/build_panelApp_database_config.json"
+    "patient_db_path": "",
+    "panel_dir": "",
+    "r_code_file": "",
+    "build_panelApp_database_config.json": ""
 }
