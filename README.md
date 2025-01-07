@@ -17,12 +17,18 @@
    git clone https://github.com/Miladeb77/Y2_Genepanel_project.git
    cd Y2_Genepanel_project
    ```
+   
+2. Create and activate conda environment:
+   ```bash
+   conda env create -f environment.yml
+   conda activate PanelApp_project
+   ```
 
-2. Install the dependencies using the provided `environment.yml` file:
+3. Install the dependencies using the provided `environment.yml` file:
    ```bash
    pip install .
    ```
-3. Navigate to the PanelGeneMapper directory
+4. Navigate to the PanelGeneMapper directory
    ```bash
    cd PanelGeneMapper
    ```
